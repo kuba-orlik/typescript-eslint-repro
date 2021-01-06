@@ -1,0 +1,24 @@
+{
+	"name": "sealious-playground",
+	"version": "1.0.1",
+	"description": "",
+	"main": "./dist/index.js",
+	"scripts": {
+		"start": "docker-compose up -d db && node .",
+		"test-cmd": "node test.js",
+		"test": "./npm.sh run test-cmd -- ",
+		"build": "tsc",
+		"watch": "npm run build -- --watch",
+		"test-reports": "npm run build && rm -fr .xunit coverage && docker-compose up -d db mailcatcher  && npm run test -- --cover --test-report",
+		"cover-html": "npm run test-reports -- --cover-html && xdg-open coverage/lcov-report/index.html"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"sealious": "^0.13.0"
+	},
+	"devDependencies": {
+		"prettier": "^2.2.1",
+		"typescript": "^4.1.3"
+	}
+}

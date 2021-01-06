@@ -1,0 +1,16 @@
+version: "3.2"
+services:
+  db:
+    image: mongo:4.4-bionic
+    ports:
+      - "127.0.0.1:20723:27017"
+  test:
+    image: sealious-test:latest
+    build:
+      context: .
+      dockerfile: test.dockerfile
+    volumes:
+      - ./:/opt/app/
+    ports:
+      - "127.0.0.1:8080:8080"
+    user: ${UID:-1000}:${GID:-1000}
