@@ -65,7 +65,14 @@ function Task(task: CollectionItem<any>) {
 	return frame(
 		`task-${task.id}`,
 		/* HTML */ `<li class="task">
-			<input type="checkbox" /> ${task.get("title")}
+			<input
+				type="checkbox"
+				data-controller="task"
+				data-action="task#toggle"
+				data-id="${task.id}"
+				${task.get("done") ? "checked" : ""}
+			/>
+			${task.get("title")}
 			<form
 				method="DELETE"
 				action="/task/${task.id}"
@@ -74,6 +81,18 @@ function Task(task: CollectionItem<any>) {
 				<input class="delete-button" type="submit" value="🗑" />
 			</form>
 		</li>`
+	);
+}
+
+async function TaskList(context: Context) {
+	const { items: tasks } = await app.collections.tasks.list(context).fetch();
+	return frame(
+		"task-list",
+		/* HTML */ `
+			<ul>
+				${tasks.map(Task).join("\n")}
+			</ul>
+		`
 	);
 }
 
@@ -93,18 +112,6 @@ function NewTask() {
 			/>
 			<input type="submit" value="Add" />
 		</form>`
-	);
-}
-
-async function TaskList(context: Context) {
-	const { items: tasks } = await app.collections.tasks.list(context).fetch();
-	return frame(
-		"task-list",
-		/* HTML */ `
-			<ul>
-				${tasks.map(Task).join("\n")}
-			</ul>
-		`
 	);
 }
 

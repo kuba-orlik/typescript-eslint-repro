@@ -27,3 +27,8 @@ body {
 	padding: 0.5rem;
 	margin-left: 0.5rem;
 }
+
+turbo-frame {
+	border: 1px solid red;
+	display: block;
+}

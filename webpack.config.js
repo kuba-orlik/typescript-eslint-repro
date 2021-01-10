@@ -4,7 +4,7 @@ module.exports = [
 	{
 		name: "front-end-components",
 		entry: {
-			bundle: "./src/front/index.ts",
+			bundle: "./src/front/index.js",
 		},
 
 		output: {
@@ -21,6 +21,11 @@ module.exports = [
 					test: /\.js$/,
 					exclude: [/node_modules/],
 					use: [{ loader: "babel-loader" }],
+				},
+				{
+					test: /\.ts$/,
+					exclude: [/node_modules/],
+					use: [{ loader: "ts-loader" }],
 				},
 			],
 		},

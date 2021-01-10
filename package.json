@@ -7,9 +7,9 @@
 		"start": "docker-compose up -d db && node .",
 		"test-cmd": "node test.js",
 		"test": "./npm.sh run test-cmd -- ",
-		"build:back": "tsc",
+		"build:back": "tsc -p src/back",
 		"build:front": "webpack",
-		"watch:back": "tsc --watch ",
+		"watch:back": "tsc --watch -p src/back",
 		"watch:front": "webpack --watch",
 		"watch": "concurrently npm:watch:back npm:watch:front",
 		"test-reports": "npm run build && rm -fr .xunit coverage && docker-compose up -d db mailcatcher  && npm run test -- --cover --test-report",
@@ -18,10 +18,12 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@babel/core": "^7.12.10",
 		"sealious": "^0.13.4",
 		"stimulus": "^2.0.0"
 	},
 	"devDependencies": {
+		"babel-loader": "^8.2.2",
 		"concurrently": "^5.3.0",
 		"prettier": "^2.2.1",
 		"ts-loader": "^8.0.14",

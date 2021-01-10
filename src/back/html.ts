@@ -6,6 +6,6 @@ export default function html(body: string): string {
 			<script type="module">
 				import hotwiredTurbo from "https://cdn.skypack.dev/@hotwired/turbo";
 			</script>
-			<script src="/bundle.js"></script>
+			<script src="/dist/bundle.js"></script>
 		</html>`;
 }
