@@ -1,0 +1,29 @@
+html {
+	background: #eee;
+}
+
+body {
+	max-width: 1024px;
+	margin: 1rem auto;
+	background: white;
+	padding: 1rem;
+}
+
+.task {
+	list-style: none;
+	display: flex;
+	align-items: center;
+	height: 1.5rem;
+}
+
+.task input[type="checkbox"] {
+	margin-right: 0.5rem;
+}
+
+.delete-button {
+	height: 1rem;
+	padding: 0;
+	line-height: 0;
+	padding: 0.5rem;
+	margin-left: 0.5rem;
+}

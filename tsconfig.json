@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "CommonJS",
 		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"noImplicitThis": true,
@@ -16,5 +16,5 @@
 		"resolveJsonModule": true,
 		"sourceMap": true
 	},
-	"include": ["src/**/*"]
+	"include": ["src/back/**/*"]
 }
