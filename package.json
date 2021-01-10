@@ -15,7 +15,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"sealious": "^0.13.0"
+		"sealious": "^0.13.2"
 	},
 	"devDependencies": {
 		"prettier": "^2.2.1",

@@ -21,3 +21,4 @@ lib
 .xunit
 coverage
 .nyc_output
+/dist/

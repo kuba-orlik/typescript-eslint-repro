@@ -1,7 +1,15 @@
-import { resolve } from "path";
-import { App, Collection, FieldTypes, Policies } from "sealious";
 import _locreq from "locreq";
+import { resolve } from "path";
+import Sealious, { App, Collection, FieldTypes, Policies } from "sealious";
 const locreq = _locreq(__dirname);
+
+declare module "koa" {
+	interface BaseContext {
+		$context: Sealious.Context;
+		$app: Sealious.App;
+		$body: Record<string, unknown>;
+	}
+}
 
 const app = new (class extends App {
 	config = {
