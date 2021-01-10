@@ -5,7 +5,7 @@ rendered front-end.
 
 ## Running
 
-```sh
+```
 npm install
 npm run build:front
 npm run build:back
