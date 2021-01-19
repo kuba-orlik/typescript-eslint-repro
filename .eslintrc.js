@@ -13,7 +13,7 @@ module.exports = {
 		ecmaFeatures: {
 			modules: true,
 		},
-		project: "./tsconfig.json",
+		project: ["./src/back/tsconfig.json", "./src/front/tsconfig.json"],
 	},
 	rules: {
 		"@typescript-eslint/require-await": 0,
