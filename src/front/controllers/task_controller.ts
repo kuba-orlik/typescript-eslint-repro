@@ -1,8 +1,6 @@
 import { Controller } from "stimulus";
 
-window;
-
-export default class extends Controller {
+export default class TaskController extends Controller {
 	id: string;
 
 	connect() {

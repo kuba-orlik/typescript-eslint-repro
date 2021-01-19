@@ -4,7 +4,7 @@ module.exports = [
 	{
 		name: "front-end-components",
 		entry: {
-			bundle: "./src/front/index.js",
+			bundle: "./src/front/index.ts",
 		},
 
 		output: {
@@ -14,6 +14,10 @@ module.exports = [
 
 		mode: "production",
 		devtool: "source-map",
+
+		resolve: {
+			extensions: [".ts", ".js"],
+		},
 
 		module: {
 			rules: [
