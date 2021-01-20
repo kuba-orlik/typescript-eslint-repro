@@ -12,7 +12,7 @@
 		"build": "npm run build:back && npm run build:front",
 		"watch:back": "tsc --watch -p src/back",
 		"watch:front": "webpack --watch",
-		"watch": "tmux new-session -d \"printf '\\033]2;%s\\033\\' 'watch:back' && npm run watch:back\" && tmux split-window -d \"printf '\\033]2;%s\\033\\' 'watch:front' && npm run watch:front\" && tmux select-layout even-horizontal && tmux set -g pane-border-status top && tmux attach",
+		"watch": "tmux new-session -d \"printf '\\033]2;%s\\033\\' 'watch:back' && npm run watch:back\" && tmux split-window -d \"printf '\\033]2;%s\\033\\' 'server' && nodemon .\" && tmux split-window -d \"printf '\\033]2;%s\\033\\' 'watch:front' && npm run watch:front\"  && tmux select-layout even-horizontal && tmux set -g pane-border-status top && tmux attach",
 		"test-reports": "npm run build && rm -fr .xunit coverage && docker-compose up -d db mailcatcher  && npm run test -- --cover --test-report",
 		"cover-html": "npm run test-reports -- --cover-html && xdg-open coverage/lcov-report/index.html"
 	},
@@ -21,6 +21,7 @@
 	"dependencies": {
 		"@babel/core": "^7.12.10",
 		"@hotwired/turbo": "^7.0.0-beta.3",
+		"nodemon": "^2.0.7",
 		"sealious": "^0.13.4",
 		"stimulus": "^2.0.0"
 	},

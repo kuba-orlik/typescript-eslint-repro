@@ -7,7 +7,5 @@ rendered front-end.
 
 ```
 npm install
-npm run build:front
-npm run build:back
-npm start
+npm run watch
 ```
