@@ -15,6 +15,9 @@ export default class TheApp extends App {
 			from_address: "sealious-playground@example.com",
 			from_name: "Sealious playground app",
 		},
+		logger: {
+			level: <const>"info",
+		},
 	};
 	manifest = {
 		name: "Sealious Playground",
