@@ -1,14 +1,6 @@
 import _locreq from "locreq";
-import { resolve } from "path";
-import Sealious, {
-	App,
-	Collection,
-	Context,
-	FieldTypes,
-	Policies,
-	Middlewares,
-	CollectionItem,
-} from "sealious";
+import Sealious, { CollectionItem, Context, Middlewares } from "sealious";
+import TheApp from "./app";
 import frame from "./frame";
 import html from "./html";
 const locreq = _locreq(__dirname);
@@ -16,47 +8,12 @@ const locreq = _locreq(__dirname);
 declare module "koa" {
 	interface BaseContext {
 		$context: Sealious.Context;
-		$app: Sealious.App;
+		$app: TheApp;
 		$body: Record<string, unknown>;
 	}
 }
 
-const app = new (class extends App {
-	config = {
-		upload_path: locreq.resolve("uploaded_files"),
-		datastore_mongo: {
-			host: "localhost",
-			port: 20723,
-			db_name: "sealious-playground",
-		},
-		email: {
-			from_address: "sealious-playground@example.com",
-			from_name: "Sealious playground app",
-		},
-	};
-	manifest = {
-		name: "Sealious Playground",
-		logo: resolve(__dirname, "../assets/logo.png"),
-		version: "0.0.1",
-		default_language: "en",
-		base_url: "localhost:8080",
-		admin_email: "admin@example.com",
-		colors: {
-			primary: "#5294a1",
-		},
-	};
-	collections = {
-		...App.BaseCollections,
-		tasks: new (class extends Collection {
-			fields = {
-				title: new FieldTypes.Text(),
-				done: new FieldTypes.Boolean(),
-			};
-			defaultPolicy = new Policies.Public();
-		})(),
-	};
-})();
-
+const app = new TheApp();
 app.start();
 
 const router = app.HTTPServer.router;
