@@ -21,6 +21,7 @@
 	"dependencies": {
 		"@babel/core": "^7.12.10",
 		"@hotwired/turbo": "^7.0.0-beta.3",
+		"@koa/router": "^10.0.0",
 		"nodemon": "^2.0.7",
 		"sealious": "^0.13.4",
 		"stimulus": "^2.0.0"
