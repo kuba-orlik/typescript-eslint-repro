@@ -1,6 +1,7 @@
 import _locreq from "locreq";
 import { resolve } from "path";
-import { App, Collection, FieldTypes, Policies } from "sealious";
+import { App } from "sealious";
+import tasks from "./collections/tasks";
 const locreq = _locreq(__dirname);
 
 export default class TheApp extends App {
@@ -32,12 +33,6 @@ export default class TheApp extends App {
 	};
 	collections = {
 		...App.BaseCollections,
-		tasks: new (class extends Collection {
-			fields = {
-				title: new FieldTypes.Text(),
-				done: new FieldTypes.Boolean(),
-			};
-			defaultPolicy = new Policies.Public();
-		})(),
+		tasks,
 	};
 }
