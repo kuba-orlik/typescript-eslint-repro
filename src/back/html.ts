@@ -1,4 +1,9 @@
-export default function html(body: string): string {
+import { Context } from "sealious";
+
+export default async function html(
+	context: Context,
+	body: string
+): Promise<string> {
 	return /* HTML */ `<!DOCTYPE html>
 		<html>
 			<head>

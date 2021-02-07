@@ -6,11 +6,14 @@ import { NewTask, TaskList } from "../views/tasks";
 const router = new Router();
 
 export async function MainView(context: Context) {
-	return html(/* HTML */ `<title>My ToDo App</title>
-		<body>
-			<h1>My ToDo App</h1>
-			${await TaskList(context)} ${NewTask()}
-		</body>`);
+	return await html(
+		context,
+		/* HTML */ `<title>My ToDo App</title>
+			<body>
+				<h1>My ToDo App</h1>
+				${await TaskList(context)} ${NewTask()}
+			</body>`
+	);
 }
 
 router.get("/", Middlewares.extractContext(), async (ctx) => {
