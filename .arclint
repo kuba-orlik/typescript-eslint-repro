@@ -3,7 +3,7 @@
 		"prettier": {
 			"type": "prettier",
 			"bin": "./node_modules/.bin/prettier",
-			"include": ["(\\.ts$)", "(\\.css$)"]
+			"include": ["(\\.[tj]s$)", "(\\.s?css$)"]
 		},
 		"eslint": {
 			"type": "eslint",
