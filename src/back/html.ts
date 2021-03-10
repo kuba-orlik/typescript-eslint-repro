@@ -7,6 +7,7 @@ export default async function html(
 	return /* HTML */ `<!DOCTYPE html>
 		<html>
 			<head>
+				<meta name="viewport" content="width=device-width" />
 				<script src="/dist/bundle.js"></script>
 			</head>
 			<link href="/style.css" rel="stylesheet" type="text/css" />
