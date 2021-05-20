@@ -15,7 +15,7 @@ declare module "koa" {
 }
 
 const app = new TheApp();
-app.start();
+void app.start();
 
 const router = app.HTTPServer.router;
 router.use("/", homepage.routes());

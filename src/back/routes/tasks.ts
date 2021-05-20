@@ -13,6 +13,7 @@ router.post(
 			.make({
 				title: ctx.$body.title as string,
 				done: false,
+				is_active: false,
 			})
 			.save(ctx.$context);
 		ctx.body = await MainView(ctx.$context);
