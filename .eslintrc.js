@@ -1,7 +1,7 @@
 module.exports = {
 	env: { node: true },
 	parser: "@typescript-eslint/parser",
-	plugins: ["@typescript-eslint", "prettier"],
+	plugins: ["@typescript-eslint", "prettier", "with-tsc-error"],
 	extends: [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
@@ -17,9 +17,9 @@ module.exports = {
 	},
 	rules: {
 		"@typescript-eslint/require-await": 0,
-		"jsdoc/require-description": 2,
-
+		/* "jsdoc/require-description": 2, */
 		"no-await-in-loop": 2,
+		"with-tsc-error/all": ["warn", {}],
 	},
 	settings: { jsdoc: { mode: "typescript" } },
 	overrides: [
