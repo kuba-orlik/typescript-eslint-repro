@@ -9,8 +9,6 @@ const PORT = process.env.SEALIOUS_PORT
 	: 8080;
 const base_url = process.env.SEALIOUS_BASE_URL || `http://localhost:${PORT}`;
 
-console.log(process.env);
-
 export default class TheApp extends App {
 	config = {
 		upload_path: locreq.resolve("uploaded_files"),
