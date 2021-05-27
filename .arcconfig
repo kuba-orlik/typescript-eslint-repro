@@ -1,6 +1,6 @@
 {
 	"phabricator.uri": "https://hub.sealcode.org/",
-	"arc.land.onto.default": "dev",
+	"arc.land.onto.default": "hotwire",
 	"load": ["arcanist-linters", "arc-unit-mocha/src"],
 	"unit.engine": "MochaEngine",
 	"unit.mocha.include": ["./lib/**/*.test.js"],

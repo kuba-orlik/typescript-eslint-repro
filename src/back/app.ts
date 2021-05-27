@@ -8,13 +8,17 @@ const PORT = process.env.SEALIOUS_PORT
 	? parseInt(process.env.SEALIOUS_PORT)
 	: 8080;
 const base_url = process.env.SEALIOUS_BASE_URL || `http://localhost:${PORT}`;
+const MONGO_PORT = process.env.SEALIOUS_MONGO_PORT
+	? parseInt(process.env.SEALIOUS_MONGO_PORT)
+	: 20723;
+const MONGO_HOST = process.env.SEALIOUS_MONGO_HOST || "localhost";
 
 export default class TheApp extends App {
 	config = {
 		upload_path: locreq.resolve("uploaded_files"),
 		datastore_mongo: {
-			host: "localhost",
-			port: 20723,
+			host: MONGO_HOST,
+			port: MONGO_PORT,
 			db_name: "sealious-playground",
 		},
 		email: {
