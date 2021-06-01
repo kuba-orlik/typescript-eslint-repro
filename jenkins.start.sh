@@ -23,5 +23,5 @@ docker-compose run --user="$UID"\
 			   -p ${SEALIOUS_PORT}:${SEALIOUS_PORT} \
 			   -d \
 			   test \
-			   /bin/sh -c "node . > log.txt" \
+			   /bin/sh -c "node . > log.txt 2>&1" \
 	&& echo "App started on $SEALIOUS_PORT"
