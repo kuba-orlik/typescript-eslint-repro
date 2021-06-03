@@ -15,7 +15,7 @@ docker-compose up -d db
 
 rm -f log.txt
 
-docker-compose run --user="$UID"\
+CONTAINER=$(docker-compose run --user="$UID"\
 			   -e "SEALIOUS_MONGO_PORT=27017" \
 			   -e "SEALIOUS_MONGO_HOST=db" \
 			   -e "SEALIOUS_PORT=$SEALIOUS_PORT" \
@@ -23,5 +23,14 @@ docker-compose run --user="$UID"\
 			   -p ${SEALIOUS_PORT}:${SEALIOUS_PORT} \
 			   -d \
 			   test \
-			   /bin/sh -c "{ node . --color  2>&1; } | ./node_modules/.bin/ansi-html-stream > log.html" \
-	&& echo "App started on $SEALIOUS_PORT"
+			   /bin/sh -c "{ node . --color  2>&1; } | ./node_modules/.bin/ansi-html-stream > log.html")
+
+echo "App started on $SEALIOUS_PORT"
+
+echo "App running in container $CONTAINER"
+
+sleep 1
+
+echo "Docker logs so far:"
+
+docker logs "$CONTAINER"
