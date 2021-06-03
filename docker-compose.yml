@@ -8,7 +8,7 @@ services:
     image: sealious-test:latest
     build:
       context: .
-      dockerfile: test.dockerfile
+      dockerfile: test.Dockerfile
     volumes:
       - ./:/opt/sealious/
     ports:

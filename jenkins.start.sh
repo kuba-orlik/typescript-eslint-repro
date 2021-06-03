@@ -23,5 +23,5 @@ docker-compose run --user="$UID"\
 			   -p ${SEALIOUS_PORT}:${SEALIOUS_PORT} \
 			   -d \
 			   test \
-			   /bin/sh -c "node . 2>&1 | ansi2html > log.html" \
+			   /bin/sh -c "{ node . --color  2>&1; } | ./node_modules/.bin/ansi-html-stream > log.html" \
 	&& echo "App started on $SEALIOUS_PORT"
