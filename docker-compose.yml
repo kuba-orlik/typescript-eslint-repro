@@ -11,6 +11,7 @@ services:
       dockerfile: test.Dockerfile
     volumes:
       - ./:/opt/sealious/
+      - ~/.npm_cacache:/opt/sealious/.npm_cacache
     user: ${UID:-1000}:${GID:-1000}
   mailcatcher:
     image: schickling/mailcatcher:latest

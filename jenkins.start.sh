@@ -18,5 +18,5 @@ docker-compose run --user="$UID"\
 	&& echo "App started on $SEALIOUS_PORT"
 
 
-echo "Deployed to https://${PORT}.dep.sealco.de"                                                                                                                                              
-echo "Application logs should be available at https://jenkins.sealcode.org/job/Deploy%20to%20dep.sealco.de/ws/$PORT/log.html" 
+echo "Deployed to https://${PORT}.dep.sealco.de"
+echo "Application logs should be available at https://jenkins.sealcode.org/job/Deploy%20to%20dep.sealco.de/ws v2/$PORT/log.html"
