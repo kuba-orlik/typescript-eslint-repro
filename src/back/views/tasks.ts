@@ -13,7 +13,6 @@ export function Task(task: CollectionItem<any>) {
 				${task.get("done") ? "checked" : ""}
 			/>
 			${task.get("title")}
-
 			<form
 				method="DELETE"
 				action="/tasks/${task.id}"

@@ -1,6 +1,6 @@
 import { Collection, FieldTypes, Policies } from "sealious";
 
-const tasks = new (class extends Collection {
+export class Tasks extends Collection {
 	fields = {
 		title: new FieldTypes.Text(),
 		done: new (class extends FieldTypes.Boolean {
@@ -11,6 +11,6 @@ const tasks = new (class extends Collection {
 		})(),
 	};
 	defaultPolicy = new Policies.Public();
-})();
+}
 
-export default tasks;
+export default new Tasks();

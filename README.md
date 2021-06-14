@@ -1,4 +1,4 @@
-# Sealious playground - hotwire version
+# Sealious playground
 
 A simple todo app written in Sealious with a Hotwire-enhanced, server-side
 rendered front-end.

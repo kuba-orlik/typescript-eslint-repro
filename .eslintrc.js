@@ -20,7 +20,6 @@ module.exports = {
 		/* "jsdoc/require-description": 2, */
 		"no-await-in-loop": 2,
 		"with-tsc-error/all": ["warn", {}],
-		"@typescript-eslint/restrict-template-expressions": 0,
 	},
 	settings: { jsdoc: { mode: "typescript" } },
 	overrides: [

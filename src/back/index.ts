@@ -15,7 +15,22 @@ declare module "koa" {
 }
 
 const app = new TheApp();
-void app.start();
+void app
+	.start()
+	.then(() => {
+		//populate scripts go here
+		if (process.env.SEALIOUS_SANITY === "true") {
+			console.log("Exiting with error code 0");
+			process.exit(0);
+		}
+	})
+	.catch((error) => {
+		console.error(error);
+		if (process.env.SEALIOUS_SANITY === "true") {
+			console.log("EXITING WITH STATUS 1");
+			process.exit(1);
+		}
+	});
 
 const router = app.HTTPServer.router;
 router.use("/", homepage.routes());

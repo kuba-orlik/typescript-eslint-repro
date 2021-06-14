@@ -11,8 +11,6 @@ services:
       dockerfile: test.Dockerfile
     volumes:
       - ./:/opt/sealious/
-    ports:
-      - "127.0.0.1:${SEALIOUS_PORT:-8080}:${SEALIOUS_PORT:-8080}"
     user: ${UID:-1000}:${GID:-1000}
   mailcatcher:
     image: schickling/mailcatcher:latest

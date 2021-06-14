@@ -26,7 +26,7 @@ export default class TheApp extends App {
 			from_name: "Sealious playground app",
 		},
 		logger: {
-			level: <const>"debug",
+			level: <const>"info",
 		},
 		"www-server": {
 			port: PORT,
