@@ -6,6 +6,8 @@ rendered front-end.
 ## Running
 
 ```
+docker-compose up -d db
+
 npm install
 npm run watch
 ```
