@@ -3,7 +3,7 @@ services:
   db:
     image: mongo:4.4-bionic
     ports:
-      - "127.0.0.1:2${SEALIOUS_PORT:-0723}:27017"
+      - "127.0.0.1:${PORT:-2072}4:27017"
   test:
     image: sealious-test:latest
     build:
@@ -16,5 +16,5 @@ services:
   mailcatcher:
     image: schickling/mailcatcher:latest
     ports:
-      - "127.0.0.1:1080:1080"
-      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:${PORT:-108}1:1080"
+      - "127.0.0.1:${PORT:-102}5:1025"

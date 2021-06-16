@@ -7,7 +7,7 @@ docker-compose down
 cp secrets.example.json secrets.json
 
 
-export SEALIOUS_PORT=$PORT
+export SEALIOUS_PORT="${PORT}0"
 SEALIOUS_BASE_URL=$(cat .base_url)
 export SEALIOUS_BASE_URL
 

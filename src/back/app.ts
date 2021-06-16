@@ -1,6 +1,6 @@
 import _locreq from "locreq";
 import { resolve } from "path";
-import { App } from "sealious";
+import { App, LoggerMailer, SMTPMailer } from "sealious";
 import tasks from "./collections/tasks";
 const locreq = _locreq(__dirname);
 
@@ -31,6 +31,9 @@ export default class TheApp extends App {
 		"www-server": {
 			port: PORT,
 		},
+		core: {
+			environment: <const>"production", // to send the full html emails
+		},
 	};
 	manifest = {
 		name: "Sealious Playground",
@@ -47,4 +50,13 @@ export default class TheApp extends App {
 		...App.BaseCollections,
 		tasks,
 	};
+	mailer =
+		process.env.SEALIOUS_MAILER === "mailcatcher"
+			? new SMTPMailer({
+					host: "mailcatcher",
+					port: 1025,
+					user: "any",
+					password: "any",
+			  })
+			: new LoggerMailer();
 }
