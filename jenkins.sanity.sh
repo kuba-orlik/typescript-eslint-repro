@@ -12,3 +12,4 @@ docker-compose run --user="$UID"\
 			   -e "SEALIOUS_SANITY=true" \
 			   test
 
+./npm.sh run build:front;
