@@ -19,3 +19,5 @@ export SEALIOUS_PORT=8888
 export SEALIOUS_BASE_URL="https://888.dep.sealcode.org"
 npm run watch
 ```
+
+If you want Sealious to send emails to mailcatcher and not log them in the console, add `SEALIOUS_MAILER=mailcatcher`
