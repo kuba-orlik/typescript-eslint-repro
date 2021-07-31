@@ -5,7 +5,7 @@ import { NewTask, TaskList } from "../views/tasks";
 
 const router = new Router();
 
-export async function MainView(context: Context) {
+export async function MainView(context: Context): Promise<string> {
 	return await html(
 		context,
 		/* HTML */ `<title>My ToDo App</title>

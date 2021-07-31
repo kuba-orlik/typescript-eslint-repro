@@ -1,7 +1,7 @@
 import { Context } from "sealious";
 
 export default async function html(
-	context: Context,
+	_context: Context,
 	body: string
 ): Promise<string> {
 	return /* HTML */ `<!DOCTYPE html>

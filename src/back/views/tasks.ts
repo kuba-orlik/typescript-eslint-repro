@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { CollectionItem, Context } from "sealious";
 import frame from "../frame";
 
-export function Task(task: CollectionItem<any>) {
+export function Task(task: CollectionItem<never>): string {
 	return frame(
 		`task-${task.id}`,
 		/* HTML */ `<li class="task">
@@ -24,7 +25,7 @@ export function Task(task: CollectionItem<any>) {
 	);
 }
 
-export async function TaskList(context: Context) {
+export async function TaskList(context: Context): Promise<string> {
 	const { items: tasks } = await context.app.collections.tasks
 		.list(context)
 		.fetch();
@@ -38,7 +39,7 @@ export async function TaskList(context: Context) {
 	);
 }
 
-export function NewTask() {
+export function NewTask(): string {
 	return frame(
 		"new-task",
 		/* HTML */ `<form
