@@ -15,7 +15,7 @@ router.post(
 				done: false,
 			})
 			.save(ctx.$context);
-		ctx.body = await MainView(ctx.$context);
+		ctx.body = MainView(ctx);
 	}
 );
 
@@ -25,7 +25,7 @@ router.delete("/:task_id", Middlewares.extractContext(), async (ctx) => {
 		ctx.params.task_id
 	);
 	await task.remove(ctx.$context);
-	ctx.body = await MainView(ctx.$context);
+	ctx.body = MainView(ctx);
 });
 
 export default router;

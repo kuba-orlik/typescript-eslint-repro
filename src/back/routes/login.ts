@@ -6,7 +6,7 @@ import html from "../html";
 const router = new Router();
 
 router.get("/", Middlewares.extractContext(), async (ctx) => {
-	ctx.body = await html(ctx.$context, LoginForm());
+	ctx.body = html(ctx, LoginForm());
 });
 
 router.post(
@@ -27,8 +27,8 @@ router.post(
 			ctx.redirect("/user");
 		} catch (e) {
 			ctx.status = 422;
-			ctx.body = await html(
-				ctx.$context,
+			ctx.body = html(
+				ctx,
 				LoginForm(ctx.$body.username as string, (e as Error).message)
 			);
 		}
