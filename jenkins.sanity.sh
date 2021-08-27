@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -xe
 
 export SEALIOUS_PORT=$PORT
 SEALIOUS_BASE_URL=$(cat .base_url)
