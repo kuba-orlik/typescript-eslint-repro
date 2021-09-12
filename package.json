@@ -12,7 +12,7 @@
 		"build": "npm run build:back && npm run build:front",
 		"watch:back": "tsc --watch -p src/back",
 		"watch:front": "webpack --watch",
-		"watch": "multiple-scripts-tmux watch:back server watch:front",
+		"watch": "multiple-scripts-tmux \"npm run watch:back\" \"SEALIOUS_PORT=$SEALIOUS_PORT SEALIOUS_BASE_URL=$SEALIOUS_BASE_URL nodemon --enable-source-maps .\" \"npm run watch:front\"",
 		"test-reports": "npm run build && rm -fr .xunit coverage && docker-compose up -d db mailcatcher  && npm run test -- --cover --test-report",
 		"cover-html": "npm run test-reports -- --cover-html && xdg-open coverage/lcov-report/index.html"
 	},
@@ -22,7 +22,7 @@
 		"@babel/core": "^7.12.10",
 		"@hotwired/turbo": "^7.0.0-beta.3",
 		"@koa/router": "^10.0.0",
-		"multiple-scripts-tmux": "^1.0.3",
+		"multiple-scripts-tmux": "^1.0.4",
 		"nodemon": "^2.0.7",
 		"sealious": "^0.13.38",
 		"stimulus": "^2.0.0",
