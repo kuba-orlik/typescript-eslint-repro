@@ -11,7 +11,7 @@ const base_url = process.env.SEALIOUS_BASE_URL || `http://localhost:${PORT}`;
 const MONGO_PORT = process.env.SEALIOUS_MONGO_PORT
 	? parseInt(process.env.SEALIOUS_MONGO_PORT)
 	: 20724;
-const MONGO_HOST = process.env.SEALIOUS_MONGO_HOST || "localhost";
+const MONGO_HOST = process.env.SEALIOUS_MONGO_HOST || "127.0.0.1";
 
 export default class TheApp extends App {
 	config = {
