@@ -1,11 +1,9 @@
-import Router from "@koa/router";
 import { Middlewares } from "sealious";
-import { MainView } from "./homepage";
-
-const router = new Router();
+import { MainView } from "..";
+import { router } from "../..";
 
 router.post(
-	"/",
+	"/tasks",
 	Middlewares.extractContext(),
 	Middlewares.parseBody(),
 	async (ctx) => {
@@ -19,7 +17,7 @@ router.post(
 	}
 );
 
-router.delete("/:task_id", Middlewares.extractContext(), async (ctx) => {
+router.delete("/tasks/:task_id", Middlewares.extractContext(), async (ctx) => {
 	const task = await ctx.$app.collections.tasks.getByID(
 		ctx.$context,
 		ctx.params.task_id
@@ -27,5 +25,3 @@ router.delete("/:task_id", Middlewares.extractContext(), async (ctx) => {
 	await task.remove(ctx.$context);
 	ctx.body = MainView(ctx);
 });
-
-export default router;

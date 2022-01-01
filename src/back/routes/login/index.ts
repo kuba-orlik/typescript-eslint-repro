@@ -1,16 +1,13 @@
-import Router from "@koa/router";
 import { Middlewares } from "sealious";
+import { router } from "../..";
+import html from "../../html";
 
-import html from "../html";
-
-const router = new Router();
-
-router.get("/", Middlewares.extractContext(), async (ctx) => {
+router.get("/login", Middlewares.extractContext(), async (ctx) => {
 	ctx.body = html(ctx, LoginForm());
 });
 
 router.post(
-	"/",
+	"/login",
 	Middlewares.extractContext(),
 	Middlewares.parseBody(),
 	async (ctx) => {
@@ -34,8 +31,6 @@ router.post(
 		}
 	}
 );
-
-export default router;
 
 function LoginForm(username = "", error_message?: string): string {
 	if (error_message) {

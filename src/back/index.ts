@@ -1,9 +1,6 @@
 import _locreq from "locreq";
 import Sealious from "sealious";
 import TheApp from "./app";
-import homepage from "./routes/homepage";
-import tasks from "./routes/tasks";
-import login from "./routes/login";
 const locreq = _locreq(__dirname);
 
 declare module "koa" {
@@ -14,7 +11,7 @@ declare module "koa" {
 	}
 }
 
-const app = new TheApp();
+export const app = new TheApp();
 void app
 	.start()
 	.then(() => {
@@ -32,9 +29,7 @@ void app
 		}
 	});
 
-const router = app.HTTPServer.router;
-router.use("/", homepage.routes());
-router.use("/tasks", tasks.routes());
-router.use("/login", login.routes());
+export const router = app.HTTPServer.router;
+require("./routes/index");
 
 app.HTTPServer.addStaticRoute("/", locreq.resolve("public"));
