@@ -1,25 +1,14 @@
+import Router from "@koa/router";
 import { Middlewares } from "sealious";
-import html from "../html";
-import { NewTask, TaskList } from "../views/tasks";
-import { BaseContext } from "koa";
-import { Readable } from "stream";
-import { tempstream } from "tempstream";
-import { router } from "..";
+import { loginRouter } from "./login/index.js";
+import { MainView } from "./main-view.js";
+import { tasksRouter } from "./tasks/index.js";
 
-export function MainView(ctx: BaseContext): Readable {
-	return html(
-		ctx,
-		/* HTML */ tempstream` <title>My ToDo App</title>
-			<body>
-				<h1>My ToDo App</h1>
-				${TaskList(ctx.$context)} ${NewTask()}
-			</body>`
-	);
-}
+export const mainRouter = (router: Router): void => {
+	router.get("/", Middlewares.extractContext(), async (ctx) => {
+		ctx.body = MainView(ctx);
+	});
 
-router.get("/", Middlewares.extractContext(), async (ctx) => {
-	ctx.body = MainView(ctx);
-});
-
-require("./login/index");
-require("./tasks/index");
+	loginRouter(router);
+	tasksRouter(router);
+};

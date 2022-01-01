@@ -1,6 +1,7 @@
 import _locreq from "locreq";
 import Sealious from "sealious";
 import TheApp from "./app";
+import { mainRouter } from "./routes";
 const locreq = _locreq(__dirname);
 
 declare module "koa" {
@@ -11,15 +12,16 @@ declare module "koa" {
 	}
 }
 
-export const app = new TheApp();
-void app
-	.start()
-	.then(() => {
+const app = new TheApp();
+
+app.start()
+	.then(async () => {
 		//populate scripts go here
 		if (process.env.SEALIOUS_SANITY === "true") {
 			console.log("Exiting with error code 0");
 			process.exit(0);
 		}
+		mainRouter(app.HTTPServer.router);
 	})
 	.catch((error) => {
 		console.error(error);
@@ -28,8 +30,5 @@ void app
 			process.exit(1);
 		}
 	});
-
-export const router = app.HTTPServer.router;
-require("./routes/index");
 
 app.HTTPServer.addStaticRoute("/", locreq.resolve("public"));
