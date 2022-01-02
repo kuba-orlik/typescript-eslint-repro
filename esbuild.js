@@ -5,12 +5,7 @@ const glob = require("tiny-glob");
 const watch = process.argv.at(-1) === "--watch";
 
 (async () => {
-	let entryPoints = Object.fromEntries(
-		(await glob("./src/back/**/*.ts")).map((e) => [
-			e.replace(/\.ts$/, ""),
-			e,
-		])
-	);
+	const entryPoints = await glob("./src/back/**/*.ts");
 	build({
 		entryPoints,
 		sourcemap: true,

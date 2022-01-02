@@ -2,7 +2,7 @@
 	"name": "sealious-playground",
 	"version": "1.0.1",
 	"description": "",
-	"main": "./dist/src/back/index.js",
+	"main": "./dist/index.js",
 	"scripts": {
 		"start": "docker-compose up -d db && node .",
 		"test-cmd": "node test.js",
@@ -10,7 +10,7 @@
 		"typecheck:back": "tsc --noEmit -p src/back",
 		"typecheck:front": "tsc --noEmit -p src/front",
 		"build": "node ./esbuild.js",
-		"watch": "multiple-scripts-tmux \"npm run typecheck:back --watch\"  \"SEALIOUS_PORT=$SEALIOUS_PORT SEALIOUS_BASE_URL=$SEALIOUS_BASE_URL nodemon --enable-source-maps .\" \"npm run build -- --watch\" \"npm run typecheck:front --watch\" ",
+		"watch": "multiple-scripts-tmux \"npm run typecheck:back -- --watch\"  \"SEALIOUS_PORT=$SEALIOUS_PORT SEALIOUS_BASE_URL=$SEALIOUS_BASE_URL nodemon --enable-source-maps .\" \"npm run build -- --watch\" \"npm run typecheck:front -- --watch\" ",
 		"test-reports": "npm run build && rm -fr .xunit coverage && docker-compose up -d db mailcatcher  && npm run test -- --cover --test-report",
 		"cover-html": "npm run test-reports -- --cover-html && xdg-open coverage/lcov-report/index.html"
 	},
