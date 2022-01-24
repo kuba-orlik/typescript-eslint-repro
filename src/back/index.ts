@@ -16,7 +16,7 @@ const app = new TheApp();
 
 app.start()
 	.then(async () => {
-		//populate scripts go here
+		await app.collections.users.populate();
 		if (process.env.SEALIOUS_SANITY === "true") {
 			console.log("Exiting with error code 0");
 			process.exit(0);

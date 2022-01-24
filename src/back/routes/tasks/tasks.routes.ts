@@ -1,6 +1,6 @@
 import Router from "@koa/router";
 import { Middlewares } from "sealious";
-import { MainView } from "../main-view";
+import { MainView } from "../common/main-view";
 
 export const tasksRouter = (router: Router): void => {
 	router.post(
@@ -18,16 +18,12 @@ export const tasksRouter = (router: Router): void => {
 		}
 	);
 
-	router.delete(
-		"/tasks/:task_id",
-		Middlewares.extractContext(),
-		async (ctx) => {
-			const task = await ctx.$app.collections.tasks.getByID(
-				ctx.$context,
-				ctx.params.task_id
-			);
-			await task.remove(ctx.$context);
-			ctx.body = MainView(ctx);
-		}
-	);
+	router.delete("/tasks/:task_id", Middlewares.extractContext(), async (ctx) => {
+		const task = await ctx.$app.collections.tasks.getByID(
+			ctx.$context,
+			ctx.params.task_id
+		);
+		await task.remove(ctx.$context);
+		ctx.body = MainView(ctx);
+	});
 };

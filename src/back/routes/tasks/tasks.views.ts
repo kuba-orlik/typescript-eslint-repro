@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { CollectionItem, Context } from "sealious";
-import frame from "../frame";
+import frame from "../../frame";
 
 export function Task(task: CollectionItem<never>): string {
 	return frame(
@@ -14,11 +14,7 @@ export function Task(task: CollectionItem<never>): string {
 				${task.get("done") ? "checked" : ""}
 			/>
 			${task.get("title")}
-			<form
-				method="DELETE"
-				action="/tasks/${task.id}"
-				data-turbo-frame="task-list"
-			>
+			<form method="DELETE" action="/tasks/${task.id}" data-turbo-frame="task-list">
 				<input class="delete-button" type="submit" value="🗑" />
 			</form>
 		</li>`
@@ -26,9 +22,7 @@ export function Task(task: CollectionItem<never>): string {
 }
 
 export async function TaskList(context: Context): Promise<string> {
-	const { items: tasks } = await context.app.collections.tasks
-		.list(context)
-		.fetch();
+	const { items: tasks } = await context.app.collections.tasks.list(context).fetch();
 	return frame(
 		"task-list",
 		/* HTML */ `
@@ -42,11 +36,7 @@ export async function TaskList(context: Context): Promise<string> {
 export function NewTask(): string {
 	return frame(
 		"new-task",
-		/* HTML */ `<form
-			method="POST"
-			action="/tasks"
-			data-turbo-frame="task-list"
-		>
+		/* HTML */ `<form method="POST" action="/tasks" data-turbo-frame="task-list">
 			<input
 				id="new-task-title"
 				type="text"

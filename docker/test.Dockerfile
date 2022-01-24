@@ -3,7 +3,7 @@ LABEL maintainer="Jakub Pieńkowski <jakski@sealcode.org>"
 
 ENV UID=node \
     GID=node \
-    HOME=/opt/sealious
+    HOME=/opt/sealious-playground
 
 RUN sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/mirrors.dotsrc.org/g' /etc/apk/repositories
 # Tini will ensure that any orphaned processes get reaped properly.

@@ -19,7 +19,7 @@ module.exports = {
 		"@typescript-eslint/require-await": 0,
 		/* "jsdoc/require-description": 2, */
 		"no-await-in-loop": 2,
-		"with-tsc-error/all": ["warn", {}],
+		"@typescript-eslint/consistent-type-assertions": [2, { assertionStyle: "never" }],
 	},
 	settings: { jsdoc: { mode: "typescript" } },
 	overrides: [

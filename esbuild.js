@@ -2,7 +2,7 @@ const { build } = require("esbuild");
 const { sassPlugin } = require("esbuild-sass-plugin");
 const glob = require("tiny-glob");
 
-const watch = process.argv.at(-1) === "--watch";
+const watch = process.argv.includes("--watch");
 
 (async () => {
 	const entryPoints = await glob("./src/back/**/*.ts");
@@ -17,7 +17,7 @@ const watch = process.argv.at(-1) === "--watch";
 		format: "cjs",
 	});
 	build({
-		entryPoints: ["./src/front/main.scss"],
+		entryPoints: ["./src/main.scss"],
 		sourcemap: true,
 		outfile: "./public/dist/style.css",
 		logLevel: "info",

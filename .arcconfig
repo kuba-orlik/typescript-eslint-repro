@@ -4,5 +4,5 @@
 	"load": ["arcanist-linters", "arc-unit-mocha/src"],
 	"unit.engine": "MochaEngine",
 	"unit.mocha.include": ["./lib/**/*.test.js"],
-	"unit.mocha.dockerRoot": "/opt/sealious"
+	"unit.mocha.dockerRoot": "/opt/sealious-playground"
 }

@@ -27,10 +27,7 @@ export const loginRouter = (router: Router): void => {
 				ctx.status = 422;
 				ctx.body = html(
 					ctx,
-					LoginForm(
-						ctx.$body.username as string,
-						(e as Error).message
-					)
+					LoginForm(ctx.$body.username as string, (e as Error).message)
 				);
 			}
 		}

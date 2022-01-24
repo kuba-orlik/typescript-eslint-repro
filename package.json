@@ -1,18 +1,17 @@
 {
 	"name": "sealious-playground",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"description": "",
 	"main": "./dist/index.js",
 	"scripts": {
 		"start": "docker-compose up -d db && node .",
-		"test-cmd": "node test.js",
-		"test": "./npm.sh run test-cmd -- ",
 		"typecheck:back": "tsc --noEmit -p src/back",
 		"typecheck:front": "tsc --noEmit -p src/front",
 		"build": "node ./esbuild.js",
 		"watch": "multiple-scripts-tmux \"npm run typecheck:back -- --watch\"  \"SEALIOUS_PORT=$SEALIOUS_PORT SEALIOUS_BASE_URL=$SEALIOUS_BASE_URL nodemon --enable-source-maps .\" \"npm run build -- --watch\" \"npm run typecheck:front -- --watch\" ",
-		"test-reports": "npm run build && rm -fr .xunit coverage && docker-compose up -d db mailcatcher  && npm run test -- --cover --test-report",
-		"cover-html": "npm run test-reports -- --cover-html && xdg-open coverage/lcov-report/index.html"
+		"test": "TS_NODE_PROJECT='./src/back/tsconfig.json' mocha --recursive --require ts-node/register src/back/**/*.test.ts",
+		"coverage": "nyc npm run test --",
+		"test-reports": "docker-compose up -d && ./npm.sh run coverage -- --reporter xunit --reporter-option output=.xunit"
 	},
 	"author": "",
 	"license": "ISC",
@@ -20,16 +19,24 @@
 		"@babel/core": "^7.12.10",
 		"@hotwired/turbo": "^7.1.0",
 		"@koa/router": "^10.0.0",
+		"@sealcode/ts-predicates": "^0.1.1",
 		"esbuild-node-tsc": "^1.8.2",
+		"locreq": "^2.0.2",
 		"multiple-scripts-tmux": "^1.0.4",
 		"nodemon": "^2.0.7",
-		"sealious": "^0.13.52",
+		"sealious": "^0.14.2",
+		"source-map-support": "^0.5.21",
 		"stimulus": "^2.0.0",
-		"tempstream": "^0.0.7"
+		"tempstream": "^0.0.7",
+		"wtfnode": "^0.9.1"
 	},
 	"devDependencies": {
+		"@istanbuljs/nyc-config-typescript": "^1.0.2",
 		"@sealcode/ansi-html-stream": "^1.0.1",
 		"@types/koa__router": "^8.0.4",
+		"@types/mocha": "^9.1.0",
+		"@typescript-eslint/eslint-plugin": "^5.10.0",
+		"axios": "^0.24.0",
 		"esbuild": "^0.14.10",
 		"esbuild-sass-plugin": "^2.0.0",
 		"eslint": "^7.19.0",
@@ -43,6 +50,26 @@
 		"prettier": "^2.2.1",
 		"tiny-glob": "^0.2.9",
 		"ts-loader": "^8.0.14",
+		"ts-node": "^10.4.0",
 		"typescript": "^4.1.3"
+	},
+	"nyc": {
+		"extends": "@istanbuljs/nyc-config-typescript",
+		"check-coverage": false,
+		"all": true,
+		"include": [
+			"src/**/!(*.test.*).[tj]s?(x)"
+		],
+		"exclude": [
+			"src/_tests_/**/*.*"
+		],
+		"reporter": [
+			"html",
+			"lcov",
+			"clover",
+			"text",
+			"text-summary"
+		],
+		"report-dir": "coverage"
 	}
 }
