@@ -19,6 +19,7 @@
 		"@babel/core": "^7.12.10",
 		"@hotwired/turbo": "^7.1.0",
 		"@koa/router": "^10.0.0",
+		"@sealcode/sealgen": "^0.1.5",
 		"@sealcode/ts-predicates": "^0.1.1",
 		"esbuild-node-tsc": "^1.8.2",
 		"locreq": "^2.0.2",
