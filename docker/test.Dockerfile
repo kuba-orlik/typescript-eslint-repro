@@ -1,17 +1,18 @@
-FROM node:15-alpine
-LABEL maintainer="Jakub Pieńkowski <jakski@sealcode.org>"
+FROM node:18-bullseye-slim
 
 ENV UID=node \
     GID=node \
-    HOME=/opt/sealious-playground
+    HOME=/opt/fakturia
 
-RUN sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/mirrors.dotsrc.org/g' /etc/apk/repositories
 # Tini will ensure that any orphaned processes get reaped properly.
-RUN apk add --no-cache tini
-RUN apk --update add git
-RUN apk --update add python
-RUN apk --update add make
-RUN apk --update add g++
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+
+RUN apt update
+RUN apt install -y git
+
+RUN chmod +x /tini
+ENTRYPOINT ["/tini", "--"]
 
 VOLUME $HOME
 WORKDIR $HOME
@@ -20,5 +21,4 @@ USER $UID:$GID
 
 EXPOSE 8080
 
-ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["/usr/local/bin/node", "."]
