@@ -3,18 +3,18 @@ services:
   db:
     image: mongo:4.4-bionic
     ports:
-      - "127.0.0.1:20725:27017"
+      - "127.0.0.1:${PORT:-2074}7:27017"
   test:
-    image: sealious-playground:latest
+    image: sealious-app:latest
     build:
       context: ./docker
       dockerfile: ./test.Dockerfile
     volumes:
-      - ./:/opt/sealious-playground/
-      - ~/.npm_cacache:/opt/sealious-playground/.npm_cacache
+      - ./:/opt/sealious-app/
+      - ~/.npm_cacache:/opt/sealious-app/.npm_cacache
     user: ${UID:-1000}:${GID:-1000}
   mailcatcher:
     image: schickling/mailcatcher:latest
     ports:
-      - "127.0.0.1:${PORT:-108}1:1080"
-      - "127.0.0.1:${PORT:-102}5:1025"
+      - "127.0.0.1:${PORT:-108}2:1080"
+      - "127.0.0.1:${PORT:-102}6:1025"

@@ -29,7 +29,7 @@ export async function withProdApp(
 	app.config.datastore_mongo = {
 		host: "db",
 		port: 27017,
-		db_name: "sealious-playground-test",
+		db_name: "sealious-app-test",
 	};
 	app.config.logger.level = <const>"none";
 	app.mailer = new SMTPMailer({

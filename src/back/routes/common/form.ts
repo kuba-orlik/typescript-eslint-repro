@@ -8,6 +8,11 @@ export interface CollectionTiedFormData<C extends Collection> {
 	errors?: Errors.FieldsError<C>;
 }
 
+export interface FormFields<Fields extends string> {
+	values: Partial<{ [field in Fields]: string }>;
+	errors?: Partial<{ [field in Fields]: string }>;
+}
+
 export function formHasAllFields<Fields extends readonly string[]>(
 	ctx: BaseContext,
 	fields: Fields,

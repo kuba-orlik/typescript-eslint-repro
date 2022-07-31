@@ -8,12 +8,13 @@
 		"target": "ES2019",
 		"esModuleInterop": true,
 		"lib": ["es6", "esnext"],
-		"outDir": "../../dist",
+		"outDir": "../../dist/back",
+		"keyofStringsOnly": true,
 		"checkJs": true,
 		"allowJs": true,
 		"resolveJsonModule": true,
 		"sourceMap": true,
 		"skipLibCheck": true
 	},
-	"include": ["./**/*"]
+	"include": ["./**/*", "./*"]
 }

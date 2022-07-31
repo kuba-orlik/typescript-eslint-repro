@@ -1,8 +1,8 @@
 {
 	"phabricator.uri": "https://hub.sealcode.org/",
-	"arc.land.onto.default": "hotwire",
+	"arc.land.onto.default": "master",
 	"load": ["arcanist-linters", "arc-unit-mocha/src"],
 	"unit.engine": "MochaEngine",
 	"unit.mocha.include": ["./lib/**/*.test.js"],
-	"unit.mocha.dockerRoot": "/opt/sealious-playground"
+	"unit.mocha.dockerRoot": "/opt/sealious-app"
 }

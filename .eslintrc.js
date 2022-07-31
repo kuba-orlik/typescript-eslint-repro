@@ -13,13 +13,18 @@ module.exports = {
 		ecmaFeatures: {
 			modules: true,
 		},
-		project: ["./src/back/tsconfig.json", "./src/front/tsconfig.json"],
+		project: [
+			"./src/back/tsconfig.json",
+			"./src/front/tsconfig.json",
+			"./src/scripts/tsconfig.json",
+		],
 	},
 	rules: {
 		"@typescript-eslint/require-await": 0,
 		/* "jsdoc/require-description": 2, */
 		"no-await-in-loop": 2,
-		"@typescript-eslint/consistent-type-assertions": [2, { assertionStyle: "never" }],
+		"@typescript-eslint/consistent-type-assertions": [1, { assertionStyle: "never" }],
+		"no-console": 1,
 	},
 	settings: { jsdoc: { mode: "typescript" } },
 	overrides: [

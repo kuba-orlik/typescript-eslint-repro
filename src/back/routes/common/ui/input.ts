@@ -7,6 +7,7 @@ export default function input({
 	placeholder,
 	error,
 	readonly,
+	required,
 }: {
 	name: string;
 	id?: string;
@@ -16,6 +17,7 @@ export default function input({
 	placeholder?: string;
 	readonly?: boolean;
 	error: string;
+	required?: boolean;
 }) {
 	id = id || name;
 	label = label || name;
@@ -23,6 +25,7 @@ export default function input({
 	value = value || "";
 	placeholder = placeholder || type;
 	readonly = readonly || false;
+	required = required || false;
 	return /* HTML */ `<div class="input">
 		<label for="${id}">${label}</label>
 		<input
@@ -32,6 +35,7 @@ export default function input({
 			value="${value}"
 			placeholder="${placeholder}"
 			${readonly ? "readonly" : ""}
+			${required ? "required" : ""}
 		/>
 		${error ? `<div class="input__error">${error}</div>` : ""}
 	</div>`;

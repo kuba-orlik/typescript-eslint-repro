@@ -1,7 +1,8 @@
-import { App, Collections, FieldTypes } from "sealious";
+import { App, Collections, Context, FieldTypes, Policies } from "sealious";
+import assert from "assert";
 import TheApp from "../app";
 
-export class Users extends Collections.users {
+export default class Users extends Collections.users {
 	fields = {
 		...App.BaseCollections.users.fields,
 		email: new FieldTypes.Email().setRequired(true),
@@ -11,7 +12,10 @@ export class Users extends Collections.users {
 		}),
 	};
 
-	async init(app: TheApp, name: string) {
+	defaultPolicy = new Policies.Themselves();
+
+	async init(app: App, name: string) {
+		assert(app instanceof TheApp);
 		await super.init(app, name);
 		app.on("started", async () => {
 			const users = await app.collections.users
@@ -23,30 +27,22 @@ export class Users extends Collections.users {
 					"ADMIN",
 					`Creating an admin account for ${app.manifest.admin_email}`
 				);
-				await app.collections["registration-intents"].suCreate({
-					email: app.manifest.admin_email,
-					role: "admin",
-					token: "",
+				await app.collections.users.suCreate({
+					username: "admin",
+					password: "adminadmin",
+					email: "admin@example.com",
+					roles: [],
 				});
 			}
 		});
 	}
 
-	async populate(): Promise<void> {
-		if (await this.app.Metadata.get("my_collection_populated")) {
-			return;
-		}
-		const app = this.app as TheApp;
+	public static async getRoles(ctx: Context) {
+		const rolesEntries = await ctx.app.collections["user-roles"]
+			.list(ctx)
+			.filter({ user: ctx.user_id || "" })
+			.fetch();
 
-		await app.collections.users.suCreate({
-			email: "admin@example.com",
-			roles: [],
-			username: "admin",
-			password: "password",
-		});
-
-		await this.app.Metadata.set("my_collection_populated", "true");
+		return rolesEntries.items.map((item) => item.get("role"));
 	}
 }
-
-export default new Users();

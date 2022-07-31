@@ -1,18 +1,18 @@
 import { BaseContext } from "koa";
 
-export default function navbar(ctx: BaseContext) {
+export default async function navbar(ctx: BaseContext) {
 	return /* HTML */ ` <nav>
-		<a href="/" style="display: flex; align-items: center">
+		<a href="/" class="nav-logo">
 			<img
 				src="/assets/logo"
 				alt="${ctx.$app.manifest.name} - logo"
 				width="50"
 				height="50"
 			/>
-			Sealious Playground
+			Sealious App
 		</a>
 		<ul>
-			<li><a href="/account/create">Register</a></li>
+			<li><a href="/logowanie">Logowanie</a></li>
 		</ul>
 	</nav>`;
 }

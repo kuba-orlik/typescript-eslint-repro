@@ -8,7 +8,5 @@ docker-compose run \
 			   --user="$UID" \
 			   --rm \
 			   --service-ports \
-			   -e BASELINE_DATABASE="baseline" \
-			   -e "BASELINE_PORT=1433" \
 			   test \
-			   npm --loglevel warn "$@"
+			   npm "$@"

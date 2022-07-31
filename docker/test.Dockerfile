@@ -2,7 +2,7 @@ FROM node:18-bullseye-slim
 
 ENV UID=node \
     GID=node \
-    HOME=/opt/fakturia
+    HOME=/opt/sealious-app
 
 # Tini will ensure that any orphaned processes get reaped properly.
 ENV TINI_VERSION v0.19.0

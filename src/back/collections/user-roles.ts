@@ -1,7 +1,7 @@
-import { ActionName, App, Collection, FieldTypes, Policies, Policy } from "sealious";
+import { App, Collection, FieldTypes, Policies, Policy } from "sealious";
 import { Roles } from "../policy-types/roles";
 
-export class UserRoles extends Collection {
+export default class UserRoles extends Collection {
 	name = "user-roles";
 	fields = {
 		role: new FieldTypes.Enum((app: App) =>
@@ -10,6 +10,7 @@ export class UserRoles extends Collection {
 		user: new FieldTypes.SingleReference("users"),
 	};
 
+	// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 	policies = {
 		create: new Roles(["admin"]),
 		delete: new Policies.Public(),
@@ -21,7 +22,7 @@ export class UserRoles extends Collection {
 		await super.init(app, collection_name);
 		app.on("started", async () => {
 			const roles = app.collections["user-roles"];
-			for (const action of ["create", "delete"] as ActionName[]) {
+			for (const action of <const>["create", "delete"]) {
 				const policy = roles.getPolicy(action);
 				if (policy instanceof Policies.Public) {
 					app.Logger.warn(
@@ -33,5 +34,3 @@ export class UserRoles extends Collection {
 		});
 	}
 }
-
-export default new UserRoles();

@@ -1,36 +1,9 @@
 import assert from "assert";
 import axios from "axios";
-import { CollectionItem, TestUtils } from "sealious";
-import { Users } from "./users";
-import TheApp from "../app";
+import { Context, TestUtils } from "sealious";
 import { withProdApp } from "../test_utils/with-prod-app";
-
-function createAUser(app: TheApp, username: string) {
-	return app.collections.users.suCreate({
-		username,
-		email: `${username}@example.com`,
-		password: "password",
-		roles: [],
-	});
-}
-
-type Unpromisify<T> = T extends Promise<infer R> ? R : T;
-
-async function createAdmin(
-	app: TheApp,
-	rest_api: TestUtils.MockRestApi
-): Promise<[CollectionItem<Users>, Unpromisify<ReturnType<typeof rest_api.login>>]> {
-	const user = await createAUser(app, "super_user");
-	await app.collections["user-roles"].suCreate({
-		user: user.id,
-		role: "admin",
-	});
-	const session = await rest_api.login({
-		username: "super_user",
-		password: "password",
-	});
-	return [user, session];
-}
+import { createAdmin, createAUser } from "../test_utils/users";
+import Users from "./users";
 
 describe("user-roles", () => {
 	it("rejects when given an empty role", async () =>
@@ -67,5 +40,31 @@ describe("user-roles", () => {
 				session
 			);
 			assert.equal(response.status, 201);
+		}));
+
+	it("get user roles with admin", async () =>
+		withProdApp(async ({ app, rest_api }) => {
+			const [user] = await createAdmin(app, rest_api);
+			const roles = await Users.getRoles(
+				new Context(app, new Date().getTime(), user.id)
+			);
+			assert.ok(roles.includes("admin"));
+		}));
+
+	it("get user with no roles", async () =>
+		withProdApp(async ({ app }) => {
+			const user = await createAUser(app, "normal");
+			const roles = await Users.getRoles(
+				new Context(app, new Date().getTime(), user.id)
+			);
+			assert.ok(roles.length === 0);
+		}));
+
+	it("get no roles for no logged user", async () =>
+		withProdApp(async ({ app }) => {
+			const roles = await Users.getRoles(
+				new Context(app, new Date().getTime(), null)
+			);
+			assert.ok(roles.length === 0);
 		}));
 });

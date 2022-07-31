@@ -1,23 +1,21 @@
-# Sealious playground
+# Sealious App
 
-A simple todo app written in Sealious with a Hotwire-enhanced, server-side
-rendered front-end.
-
-## Running
+## Installation
 
 ```
-docker-compose up -d db
+./npm.sh install
+```
 
-npm install
+Always use ./npm.sh when installing dependencies.
+
+## Running the app in development mode
+
+```
 npm run watch
 ```
 
-## Running on a custom port
+## Testing
 
 ```
-export SEALIOUS_PORT=8888
-export SEALIOUS_BASE_URL="https://888.dep.sealcode.org"
-npm run watch
+./npm.sh run test
 ```
-
-If you want Sealious to send emails to mailcatcher and not log them in the console, add `SEALIOUS_MAILER=mailcatcher`

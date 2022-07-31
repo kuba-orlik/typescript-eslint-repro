@@ -24,3 +24,5 @@ coverage
 /dist/
 public/dist
 /log.html
+/hint-report/
+.vscode

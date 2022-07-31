@@ -9,7 +9,7 @@ const watch = process.argv.includes("--watch");
 	build({
 		entryPoints,
 		sourcemap: true,
-		outdir: "./dist",
+		outdir: "./dist/back",
 		logLevel: "info",
 		platform: "node",
 		watch,

@@ -9,17 +9,6 @@ body {
 	padding: 1rem;
 }
 
-.task {
-	list-style: none;
-	display: flex;
-	align-items: center;
-	height: 1.5rem;
-}
-
-.task input[type="checkbox"] {
-	margin-right: 0.5rem;
-}
-
 .delete-button {
 	height: 1rem;
 	padding: 0;
@@ -27,6 +16,12 @@ body {
 	padding: 0.5rem;
 }
 
+.nav-logo {
+	display: flex;
+	align-items: center;
+}
+
 // === Views ===
 
 @import "back/routes/common/ui/input.scss";
+@import "back/forms/forms.scss";
