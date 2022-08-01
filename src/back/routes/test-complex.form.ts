@@ -25,7 +25,7 @@ class NumberSum<Field1 extends string, Field2 extends string> extends FormFieldC
 }
 
 export default new (class TestComplexForm extends Form {
-	defaultSuccessMessage = "Pomyślnie utworzono użytkownika";
+	defaultSuccessMessage = "Formularz wypełniony poprawnie";
 
 	fields = [
 		new FormField("A", true),
