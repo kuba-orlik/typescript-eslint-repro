@@ -18,9 +18,10 @@ export default class Users extends Collections.users {
 		assert(app instanceof TheApp);
 		await super.init(app, name);
 		app.on("started", async () => {
+			const username = "admin";
 			const users = await app.collections.users
 				.suList()
-				.filter({ email: app.manifest.admin_email })
+				.filter({ username })
 				.fetch();
 			if (users.empty) {
 				app.Logger.warn(
@@ -28,7 +29,7 @@ export default class Users extends Collections.users {
 					`Creating an admin account for ${app.manifest.admin_email}`
 				);
 				await app.collections.users.suCreate({
-					username: "admin",
+					username,
 					password: "adminadmin",
 					email: "admin@example.com",
 					roles: [],
