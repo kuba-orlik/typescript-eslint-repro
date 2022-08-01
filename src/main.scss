@@ -21,7 +21,4 @@ body {
 	align-items: center;
 }
 
-// === Views ===
-
-@import "back/routes/common/ui/input.scss";
-@import "back/forms/forms.scss";
+@import "includes.scss";
