@@ -1,5 +1,10 @@
 # Sealious App
 
+## Requirements
+
+-   docker
+-   docker-compose (version 2.6 or up)
+
 ## Installation
 
 ```
