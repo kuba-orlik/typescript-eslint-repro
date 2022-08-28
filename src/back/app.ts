@@ -1,5 +1,5 @@
 import _locreq from "locreq";
-import { App, LoggerMailer, SMTPMailer } from "sealious";
+import { default as Sealious, App, LoggerMailer, SMTPMailer } from "sealious";
 import { LoggerLevel } from "sealious/@types/src/app/logger";
 import { collections } from "./collections/collections";
 const locreq = _locreq(__dirname);
@@ -8,8 +8,15 @@ const PORT = process.env.SEALIOUS_PORT ? parseInt(process.env.SEALIOUS_PORT) : 8
 const base_url = process.env.SEALIOUS_BASE_URL || `http://localhost:${PORT}`;
 const MONGO_PORT = process.env.SEALIOUS_MONGO_PORT
 	? parseInt(process.env.SEALIOUS_MONGO_PORT)
-	: 20726;
+	: 20747;
 const MONGO_HOST = process.env.SEALIOUS_MONGO_HOST || "127.0.0.1";
+
+declare module "koa" {
+	interface BaseContext {
+		$context: Sealious.Context;
+		$app: TheApp;
+	}
+}
 
 export default class TheApp extends App {
 	config = {

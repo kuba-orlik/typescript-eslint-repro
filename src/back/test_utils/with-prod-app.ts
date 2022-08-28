@@ -6,14 +6,6 @@ const locreq = _locreq(__dirname);
 import Sealious, { SMTPMailer } from "sealious";
 import { TestUtils } from "sealious";
 
-declare module "koa" {
-	interface BaseContext {
-		$context: Sealious.Context;
-		$app: TheApp;
-		$body: Record<string, unknown>;
-	}
-}
-
 export async function withProdApp(
 	callback: (args: {
 		app: TheApp;

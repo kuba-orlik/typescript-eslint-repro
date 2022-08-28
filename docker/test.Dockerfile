@@ -1,8 +1,6 @@
 FROM node:18-bullseye-slim
 
-ENV UID=node \
-    GID=node \
-    HOME=/opt/sealious-app
+ENV HOME=/opt/sealious-app
 
 # Tini will ensure that any orphaned processes get reaped properly.
 ENV TINI_VERSION v0.19.0
@@ -16,6 +14,8 @@ ENTRYPOINT ["/tini", "--"]
 
 VOLUME $HOME
 WORKDIR $HOME
+
+RUN npm install -g npm@latest
 
 USER $UID:$GID
 

@@ -4,7 +4,7 @@ SEALIOUS_PORT="${PORT}0"
 SEALIOUS_BASE_URL=$(cat .base_url)
 export SEALIOUS_BASE_URL
 
-./npm.sh run build:front
+./npm.sh --no-TTY --user="$UID"  run build:front
 
 docker-compose up -d mailcatcher
 

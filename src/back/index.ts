@@ -1,16 +1,7 @@
 import _locreq from "locreq";
-import Sealious from "sealious";
 import TheApp from "./app";
 import { mainRouter } from "./routes";
 const locreq = _locreq(__dirname);
-
-declare module "koa" {
-	interface BaseContext {
-		$context: Sealious.Context;
-		$app: TheApp;
-		$body: Record<string, unknown>;
-	}
-}
 
 const app = new TheApp();
 

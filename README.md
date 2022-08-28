@@ -1,4 +1,4 @@
-# Sealious App
+# Sealious app
 
 ## Requirements
 
@@ -16,6 +16,8 @@ Always use ./npm.sh when installing dependencies.
 ## Running the app in development mode
 
 ```
+npx sealgen make-env
+docker-compose up -d
 npm run watch
 ```
 
