@@ -3,7 +3,7 @@ set -e
 
 docker-compose down
 
-./make-env.sh
+npx sealgen make-env
 cp secrets.example.json secrets.json
 
 export SEALIOUS_PORT="${PORT}0"
