@@ -1,3 +1,4 @@
+import kill from "kill-port";
 import _locreq from "locreq";
 import TheApp from "./app";
 import { mainRouter } from "./routes";
@@ -5,7 +6,8 @@ const locreq = _locreq(__dirname);
 
 const app = new TheApp();
 
-app.start()
+kill(app.config["www-server"].port)
+	.then(() => app.start())
 	.then(async () => {
 		if (process.env.SEALIOUS_SANITY === "true") {
 			console.log("Exiting with error code 0");
