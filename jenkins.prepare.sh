@@ -9,6 +9,7 @@ cp secrets.example.json secrets.json
 export SEALIOUS_PORT="${PORT}0"
 SEALIOUS_BASE_URL=$(cat .base_url)
 export SEALIOUS_BASE_URL
+echo "PORT=$PORT" >> .env
 
 # Create the npm cache directory if it isn't present yet. If it is not present, it will be created
 # when the docker image is being built with root:root as the owner.

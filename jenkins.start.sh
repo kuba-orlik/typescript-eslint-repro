@@ -21,5 +21,5 @@ docker-compose run --user="$UID" \
 	echo "App started on $SEALIOUS_PORT"
 
 echo "Deployed app to https://${SEALIOUS_PORT}.dep.sealco.de"
-echo "Mailcatcher available at https://${PORT}1.dep.sealco.de"
-echo "Application logs should be available at https://jenkins.sealcode.org/job/Deploy%20to%20dep.sealco.de/ws v2/$PORT/log.html"
+echo "Mailcatcher available at https://${PORT}2.dep.sealco.de"
+echo "Application logs should be available at https://jenkins.sealcode.org/job/Deploy%20to%20dep.sealco.de/ws%20v2/$PORT/log.html"
