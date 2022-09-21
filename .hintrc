@@ -7,12 +7,17 @@
 	"extends": ["web-recommended", "accessibility"],
 	"hints": {
 		"no-friendly-error-pages": "off",
-		"no-broken-links": "error",
+		"no-broken-links": "warning",
 		"doctype": "error",
 		"apple-touch-icons": "error",
 		"button-type": "error",
 		"compat-api/css": "error",
-		"compat-api/html": "error",
+		"compat-api/html": [
+			"error",
+			{
+				"ignore": ["img[loading]"]
+			}
+		],
 		"create-element-svg": "error",
 		"css-prefix-order": "error",
 		"disown-opener": "error",
