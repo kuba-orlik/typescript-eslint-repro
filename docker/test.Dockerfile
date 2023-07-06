@@ -8,6 +8,7 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 
 RUN apt update
 RUN apt install -y git
+RUN apt install -y tmux
 
 RUN chmod +x /tini
 ENTRYPOINT ["/tini", "--"]
