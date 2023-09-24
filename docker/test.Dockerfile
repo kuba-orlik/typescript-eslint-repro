@@ -17,6 +17,7 @@ VOLUME $HOME
 WORKDIR $HOME
 
 RUN npm install -g npm@latest
+RUN npm install -g @sealcode/sealgen
 
 USER $UID:$GID
 
