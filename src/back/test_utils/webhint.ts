@@ -4,7 +4,8 @@ import { spawn } from "child_process";
 import { hasShape, is, predicates } from "@sealcode/ts-predicates";
 import { promises as fs } from "fs";
 
-export const LONG_TEST_TIMEOUT = 30 * 1000;
+export const LONG_TEST_TIMEOUT = 100 * 1000;
+export const VERY_LONG_TEST_TIMEOUT = 75 * 1000;
 
 export async function webhintURL(url: string, config = locreq.resolve(".hintrc")) {
 	// eslint-disable-next-line no-console

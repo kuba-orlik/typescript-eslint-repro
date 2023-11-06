@@ -3,7 +3,8 @@ import assert from "assert";
 import TheApp from "../app";
 import { withProdApp } from "../test_utils/with-prod-app";
 
-describe("password-reset-intents", () => {
+describe("password-reset-intents", function () {
+	//ts-ignore
 	async function createAUser(app: TheApp) {
 		await app.collections.users.suCreate({
 			username: "user",
@@ -13,8 +14,8 @@ describe("password-reset-intents", () => {
 		});
 	}
 
-	it("tells you if the email address doesn't exist", async () =>
-		withProdApp(async ({ app, base_url }) => {
+	it("tells you if the email address doesn't exist", async function () {
+		return withProdApp(async ({ app, base_url }) => {
 			const email = "fake@example.com";
 			try {
 				await axios.post(
@@ -31,7 +32,8 @@ describe("password-reset-intents", () => {
 				return;
 			}
 			throw new Error("it didn't throw");
-		}));
+		});
+	});
 
 	it("allows anyone to create an intent, if the email exists", async () =>
 		withProdApp(async ({ app, base_url }) => {

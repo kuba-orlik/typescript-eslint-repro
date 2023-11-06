@@ -1,4 +1,4 @@
-import { App, EmailTemplates, Errors } from "sealious";
+import { EmailTemplates, Errors } from "sealious";
 import TheApp from "../app";
 
 export default async function PasswordResetTemplate(
@@ -18,7 +18,7 @@ export default async function PasswordResetTemplate(
 
 	return EmailTemplates.Simple(app, {
 		subject: app.i18n("password_reset_email_subject", [app.manifest.name]),
-		to: `${username}<${email_address}>`,
+		to: `${String(username)}<${email_address}>`,
 		text: `
          ${app.i18n("password_reset_email_text", [app.manifest.name, username])}`,
 		buttons: [

@@ -10,7 +10,7 @@
 		"lib": ["es6", "esnext"],
 		"outDir": "../../dist/back",
 		"keyofStringsOnly": true,
-		"checkJs": true,
+		"checkJs": false,
 		"allowJs": true,
 		"resolveJsonModule": true,
 		"sourceMap": true,

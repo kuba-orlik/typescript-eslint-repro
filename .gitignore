@@ -6,6 +6,7 @@ tmp/
 *.sublime-workspace
 npm-debug.log
 node_modules
+docker_node_modules
 db
 coverage.html
 \#*
@@ -27,3 +28,5 @@ public/dist
 /hint-report/
 .vscode
 .env
+.npm_cache/
+.mozilla/

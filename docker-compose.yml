@@ -11,8 +11,9 @@ services:
       dockerfile: ./test.Dockerfile
     volumes:
       - ./:/opt/sealious-app/
-      - ~/.npm_cacache:/opt/sealious-app/.npm_cacache
-    user: ${UID:-1000}:${GID:-1000}
+      - /tmp:/tmp
+      - ./docker_node_modules:/opt/sealious-app/node_modules
+    user: ${USER_ID:-1000}:${GROUP_ID:-1000}
   mailcatcher:
     image: schickling/mailcatcher:latest
     ports:

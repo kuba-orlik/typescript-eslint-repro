@@ -2,6 +2,7 @@ import _locreq from "locreq";
 import { default as Sealious, App, LoggerMailer, SMTPMailer } from "sealious";
 import { LoggerLevel } from "sealious/@types/src/app/logger";
 import { collections } from "./collections/collections";
+import ADMIN_CREDENTIALS from "./default-admin-credentials";
 const locreq = _locreq(__dirname);
 
 const PORT = process.env.SEALIOUS_PORT ? parseInt(process.env.SEALIOUS_PORT) : 8080;
@@ -47,7 +48,7 @@ export default class TheApp extends App {
 		version: "0.0.1",
 		default_language: "en",
 		base_url,
-		admin_email: "admin@example.com",
+		admin_email: ADMIN_CREDENTIALS.email,
 		colors: {
 			primary: "#5294a1",
 		},

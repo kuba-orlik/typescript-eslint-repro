@@ -10,7 +10,7 @@ kill(app.config["www-server"].port)
 	.then(() => app.start())
 	.then(async () => {
 		if (process.env.SEALIOUS_SANITY === "true") {
-			console.log("Exiting with error code 0");
+			console.error("Exiting with error code 0");
 			process.exit(0);
 		}
 		mainRouter(app.HTTPServer.router);
@@ -18,7 +18,7 @@ kill(app.config["www-server"].port)
 	.catch((error) => {
 		console.error(error);
 		if (process.env.SEALIOUS_SANITY === "true") {
-			console.log("EXITING WITH STATUS 1");
+			console.error("EXITING WITH STATUS 1");
 			process.exit(1);
 		}
 	});

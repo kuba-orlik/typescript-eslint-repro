@@ -1,7 +1,7 @@
 import { BaseContext } from "koa";
 import { hasShape, is, predicates } from "@sealcode/ts-predicates";
 import { Collection, Errors } from "sealious";
-import { ItemFields } from "sealious/@types/src/chip-types/collection-item-body";
+import ItemFields from "sealious/@types/src/chip-types/collection-item-body";
 
 export interface CollectionTiedFormData<C extends Collection> {
 	values: Partial<{ [field in keyof ItemFields<C>]: string }>;

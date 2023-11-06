@@ -1,9 +1,10 @@
 import TheApp from "../app";
 import { mainRouter } from "../routes";
 import _locreq from "locreq";
+import { v4 as uuid } from "uuid";
 
 const locreq = _locreq(__dirname);
-import Sealious, { SMTPMailer } from "sealious";
+import { SMTPMailer } from "sealious";
 import { TestUtils } from "sealious";
 
 export async function withProdApp(
@@ -21,7 +22,7 @@ export async function withProdApp(
 	app.config.datastore_mongo = {
 		host: "db",
 		port: 27017,
-		db_name: "sealious-app-test",
+		db_name: "sealious-app-test" + uuid(),
 	};
 	app.config.logger.level = <const>"none";
 	app.mailer = new SMTPMailer({
@@ -31,11 +32,11 @@ export async function withProdApp(
 		password: "any",
 	});
 
-	await app.start();
 	mainRouter(app.HTTPServer.router);
 
 	app.HTTPServer.addStaticRoute("/", locreq.resolve("public"));
 
+	await app.start();
 	const base_url = `http://127.0.0.1:${port}`;
 	const mail_api = new TestUtils.MailcatcherAPI("http://mailcatcher:1080", app);
 	await mail_api.deleteAllInstanceEmails();
@@ -52,9 +53,12 @@ export async function withProdApp(
 			rest_api: new TestUtils.MockRestApi(base_url),
 			mail_api,
 		});
+
 		await stop();
 	} catch (e) {
-		await stop();
+		if (app.status !== "stopped") {
+			await stop();
+		}
 		console.error(e);
 		throw e;
 	}

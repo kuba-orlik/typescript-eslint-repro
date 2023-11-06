@@ -1,5 +1,5 @@
 #!/bin/bash -xe
-
+echo "starting sanity test..."
 export SEALIOUS_PORT=$PORT
 SEALIOUS_BASE_URL=$(cat .base_url)
 export SEALIOUS_BASE_URL
@@ -14,4 +14,3 @@ docker-compose run --user="$UID" \
 	-e "SEALIOUS_BASE_URL=$SEALIOUS_BASE_URL" \
 	-e "SEALIOUS_SANITY=true" \
 	test
-
