@@ -39,7 +39,7 @@
 		"locreq": "^2.0.2",
 		"multiple-scripts-tmux": "^1.0.4",
 		"nodemon": "^3.0.1",
-		"sealious": "^0.17.35",
+		"sealious": "^0.17.36",
 		"stimulus": "^2.0.0",
 		"tempstream": "^0.0.21"
 	},
