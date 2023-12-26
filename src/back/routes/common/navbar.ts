@@ -15,7 +15,11 @@ export default async function navbar(ctx: BaseContext) {
 		  ];
 
 	const linksHTML = linkData
-		.map((link) => `<li><a href="${link.url}">${link.text}</a></li>`)
+		.map((link) =>
+			link.url === new URL(ctx.url, "https://a.com").pathname
+				? `<li>${link.text}</li>`
+				: /* HTML */ `<li><a href="${link.url}">${link.text}</a></li>`
+		)
 		.join("\n");
 
 	return /* HTML */ ` <nav>
