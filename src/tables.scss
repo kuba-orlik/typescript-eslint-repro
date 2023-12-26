@@ -1,0 +1,33 @@
+table,
+td,
+th {
+	border-collapse: collapse;
+}
+
+.list-pagination {
+	display: grid;
+	grid-template-columns: 1fr min-content 1fr;
+	grid-column-gap: 1rem;
+	margin-bottom: 0.5rem;
+
+	&__left {
+		text-align: right;
+	}
+}
+
+thead th {
+	background-color: #ddd;
+	border-style: solid;
+	border-width: 1px 0 1px 0;
+	border-color: #777;
+	padding: 9px 7px;
+	font-size: 14px;
+}
+
+tr:hover {
+	background-color: #ccc;
+}
+
+td {
+	padding: 2px 8px;
+}
