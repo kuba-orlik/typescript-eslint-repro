@@ -7,10 +7,10 @@ import {
 	Controls,
 	FormReaction,
 } from "@sealcode/sealgen";
-import html from "../html";
-import { Users } from "../collections/collections";
 import { FlatTemplatable, tempstream } from "tempstream";
-import { PageErrorMessage } from "@sealcode/sealgen/@types/page/mountable-with-fields";
+import { Users } from "../collections/collections.js";
+import type { PageErrorMessage } from "@sealcode/sealgen/@types/page/mountable-with-fields.js";
+import html from "../html.js";
 
 export const actionName = "SignIn";
 

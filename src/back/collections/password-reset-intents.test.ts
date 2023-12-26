@@ -1,7 +1,7 @@
 import axios from "axios";
 import assert from "assert";
-import TheApp from "../app";
-import { withProdApp } from "../test_utils/with-prod-app";
+import TheApp from "../app.js";
+import { withProdApp } from "../test_utils/with-prod-app.js";
 
 describe("password-reset-intents", function () {
 	//ts-ignore
@@ -18,7 +18,7 @@ describe("password-reset-intents", function () {
 		return withProdApp(async ({ app, base_url }) => {
 			const email = "fake@example.com";
 			try {
-				await axios.post(
+				await axios.default.post(
 					`${base_url}/api/v1/collections/password-reset-intents`,
 					{
 						email: email,
@@ -39,7 +39,7 @@ describe("password-reset-intents", function () {
 		withProdApp(async ({ app, base_url }) => {
 			await createAUser(app);
 			const { email, token } = (
-				await axios.post(
+				await axios.default.post(
 					`${base_url}/api/v1/collections/password-reset-intents`,
 					{
 						email: "user@example.com",
@@ -59,7 +59,7 @@ describe("password-reset-intents", function () {
 		withProdApp(async ({ app, base_url }) => {
 			const email = "incorrect-address";
 			try {
-				await axios.post(
+				await axios.default.post(
 					`${base_url}/api/v1/collections/password-reset-intents`,
 					{
 						email: email,
@@ -78,9 +78,12 @@ describe("password-reset-intents", function () {
 	it("sends an email with the reset password link", async () =>
 		withProdApp(async ({ app, base_url, mail_api }) => {
 			await createAUser(app);
-			await axios.post(`${base_url}/api/v1/collections/password-reset-intents`, {
-				email: "user@example.com",
-			});
+			await axios.default.post(
+				`${base_url}/api/v1/collections/password-reset-intents`,
+				{
+					email: "user@example.com",
+				}
+			);
 			const messages = (await mail_api.getMessages()).filter(
 				(message) => message.recipients[0] == "<user@example.com>"
 			);

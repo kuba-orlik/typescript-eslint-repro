@@ -1,11 +1,12 @@
-import TheApp from "../app";
-import { mainRouter } from "../routes";
 import _locreq from "locreq";
 import { v4 as uuid } from "uuid";
 
-const locreq = _locreq(__dirname);
+const locreq = _locreq.default(module_dirname(import.meta.url));
 import { SMTPMailer } from "sealious";
 import { TestUtils } from "sealious";
+import TheApp from "../app.js";
+import { mainRouter } from "../routes/index.js";
+import { module_dirname } from "../util.js";
 
 export async function withProdApp(
 	callback: (args: {

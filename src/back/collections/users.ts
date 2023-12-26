@@ -1,7 +1,7 @@
 import { App, Collections, Context, FieldTypes, Policies } from "sealious";
 import assert from "assert";
-import TheApp from "../app";
-import ADMIN_CREDENTIALS from "../default-admin-credentials";
+import TheApp from "../app.js";
+import ADMIN_CREDENTIALS from "../default-admin-credentials.js";
 
 export default class Users extends Collections.users {
 	fields = {

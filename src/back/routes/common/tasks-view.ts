@@ -1,7 +1,7 @@
 import { BaseContext } from "koa";
 import { CollectionItem } from "sealious";
-import frame from "../../frame";
-import { Tasks } from "../../collections/collections";
+import frame from "../../frame.js";
+import { Tasks } from "../../collections/collections.js";
 
 export function Task(task: CollectionItem<typeof Tasks>) {
 	return frame(

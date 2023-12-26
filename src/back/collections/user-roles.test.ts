@@ -1,9 +1,9 @@
 import assert from "assert";
 import axios from "axios";
 import { Context, TestUtils } from "sealious";
-import { withProdApp } from "../test_utils/with-prod-app";
-import { createAdmin, createAUser } from "../test_utils/users";
-import Users from "./users";
+import { withProdApp } from "../test_utils/with-prod-app.js";
+import { createAdmin, createAUser } from "../test_utils/users.js";
+import Users from "./users.js";
 
 describe("user-roles", () => {
 	it("rejects when given an empty role", async () =>
@@ -31,7 +31,7 @@ describe("user-roles", () => {
 	it("accepts correct dataset", async () =>
 		withProdApp(async ({ app, base_url, rest_api }) => {
 			const [user, session] = await createAdmin(app, rest_api);
-			const response = await axios.post(
+			const response = await axios.default.post(
 				`${base_url}/api/v1/collections/user-roles`,
 				{
 					user: user.id,

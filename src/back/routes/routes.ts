@@ -2,13 +2,13 @@
 
 import Router from "@koa/router";
 import { mount } from "@sealcode/sealgen";
-import * as URLs from "./urls";
+import * as URLs from "./urls.js";
 
-import { default as Hello } from "./hello.page";
-import { default as Logout } from "./logout.redirect";
-import { default as SignIn } from "./signIn.form";
-import { default as SignUp } from "./signUp.form";
-import { default as Todo } from "./todo.form";
+import { default as Hello } from "./hello.page.js";
+import { default as Logout } from "./logout.redirect.js";
+import { default as SignIn } from "./signIn.form.js";
+import { default as SignUp } from "./signUp.form.js";
+import { default as Todo } from "./todo.form.js";
 
 export default function mountAutoRoutes(router: Router) {
 	mount(router, URLs.HelloURL, Hello);

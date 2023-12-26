@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"description": "",
 	"main": "./dist/back/index.js",
+	"type": "module",
 	"scripts": {
 		"start": "docker-compose up -d db && node .",
 		"typecheck:back": "npx tsc --noEmit --target es6 --lib es2015,dom -p src/back",
@@ -32,7 +33,7 @@
 		"@hotwired/turbo": "^7.1.0",
 		"@koa/router": "^12.0.1",
 		"@playwright/test": "^1.36.1",
-		"@sealcode/sealgen": "^0.8.52",
+		"@sealcode/sealgen": "^0.9.0",
 		"@sealcode/ts-predicates": "^0.4.3",
 		"@types/kill-port": "^2.0.0",
 		"hint": "^7.0.1",
@@ -68,7 +69,7 @@
 		"prettier": "^2.2.1",
 		"ts-loader": "^8.0.14",
 		"ts-node": "^10.4.0",
-		"typescript": "^4.1.3"
+		"typescript": "^4.7"
 	},
 	"nyc": {
 		"extends": "@istanbuljs/nyc-config-typescript",

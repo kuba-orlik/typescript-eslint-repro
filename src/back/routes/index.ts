@@ -1,7 +1,7 @@
 import Router from "@koa/router";
 import { Middlewares } from "sealious";
-import { MainView } from "./common/main-view";
-import mountAutoRoutes from "./routes";
+import { MainView } from "./common/main-view.js";
+import mountAutoRoutes from "./routes.js";
 
 export const mainRouter = (router: Router): void => {
 	router.get("/", Middlewares.extractContext(), async (ctx) => {

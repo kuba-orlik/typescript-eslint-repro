@@ -1,5 +1,5 @@
 import { Collection, FieldTypes, Policies } from "sealious";
-import { Roles } from "../policy-types/roles";
+import { Roles } from "../policy-types/roles.js";
 
 export default class GroupsToUsers extends Collection {
 	fields = {

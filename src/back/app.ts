@@ -1,9 +1,10 @@
 import _locreq from "locreq";
-import { default as Sealious, App, LoggerMailer, SMTPMailer } from "sealious";
-import { LoggerLevel } from "sealious/@types/src/app/logger";
-import { collections } from "./collections/collections";
-import ADMIN_CREDENTIALS from "./default-admin-credentials";
-const locreq = _locreq(__dirname);
+import Sealious, { App, LoggerMailer, SMTPMailer } from "sealious";
+import type { LoggerLevel } from "sealious/@types/src/app/logger.js";
+import { collections } from "./collections/collections.js";
+import ADMIN_CREDENTIALS from "./default-admin-credentials.js";
+import { module_dirname } from "./util.js";
+const locreq = _locreq.default(module_dirname(import.meta.url));
 
 const PORT = process.env.SEALIOUS_PORT ? parseInt(process.env.SEALIOUS_PORT) : 8080;
 const base_url = process.env.SEALIOUS_BASE_URL || `http://localhost:${PORT}`;

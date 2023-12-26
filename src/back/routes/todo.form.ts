@@ -1,9 +1,9 @@
-import { Tasks } from "./../collections/collections";
 import { tempstream } from "tempstream";
 import { Context } from "koa";
 import { Form, FormData, FormDataValue, Fields, Controls } from "@sealcode/sealgen";
-import html from "../html";
-import { TaskList } from "./common/tasks-view";
+import { Tasks } from "../collections/collections.js";
+import html from "../html.js";
+import { TaskList } from "./common/tasks-view.js";
 
 export const actionName = "Todo";
 

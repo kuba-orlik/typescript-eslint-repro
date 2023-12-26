@@ -1,5 +1,5 @@
 import { EmailTemplates, Errors } from "sealious";
-import TheApp from "../app";
+import TheApp from "../app.js";
 
 export default async function PasswordResetTemplate(
 	app: TheApp,

@@ -1,7 +1,7 @@
 import { App, Collection, CollectionItem, Context, FieldTypes, Policies } from "sealious";
 import assert from "assert";
-import PasswordResetTemplate from "../email-templates/password-reset";
-import TheApp from "../app";
+import PasswordResetTemplate from "../email-templates/password-reset.js";
+import TheApp from "../app.js";
 import { assertType, predicates } from "@sealcode/ts-predicates";
 
 export default class PasswordResetIntents extends Collection {

@@ -7,8 +7,8 @@ import {
 	Controls,
 	FormReaction,
 } from "@sealcode/sealgen";
-import html from "../html";
-import { Users } from "../collections/collections";
+import { Users } from "../collections/collections.js";
+import html from "../html.js";
 
 export const actionName = "SignUp";
 

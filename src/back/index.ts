@@ -1,8 +1,9 @@
 import kill from "kill-port";
 import _locreq from "locreq";
-import TheApp from "./app";
-import { mainRouter } from "./routes";
-const locreq = _locreq(__dirname);
+import TheApp from "./app.js";
+import { mainRouter } from "./routes/index.js";
+import { module_dirname } from "./util.js";
+const locreq = _locreq.default(module_dirname(import.meta.url));
 
 const app = new TheApp();
 

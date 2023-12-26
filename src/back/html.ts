@@ -1,7 +1,7 @@
 import { Templatable, tempstream } from "tempstream";
 import { Readable } from "stream";
 import { BaseContext } from "koa";
-import navbar from "./routes/common/navbar";
+import navbar from "./routes/common/navbar.js";
 
 export const defaultHead = (ctx: BaseContext, title: string) => /* HTML */ `<title>
 		${title} · ${ctx.$app.manifest.name}

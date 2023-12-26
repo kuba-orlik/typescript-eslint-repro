@@ -1,10 +1,10 @@
 import assert from "assert";
-import { withProdApp } from "../test_utils/with-prod-app";
-import { LONG_TEST_TIMEOUT, VERY_LONG_TEST_TIMEOUT } from "../test_utils/webhint";
-import { LogoutURL, SignInURL } from "./urls";
 import { Browser, BrowserContext, Page } from "@playwright/test";
-import { getBrowser } from "../test_utils/browser-creator";
-import ADMIN_CREDENTIALS from "../default-admin-credentials";
+import ADMIN_CREDENTIALS from "../default-admin-credentials.js";
+import { getBrowser } from "../test_utils/browser-creator.js";
+import { LONG_TEST_TIMEOUT, VERY_LONG_TEST_TIMEOUT } from "../test_utils/webhint.js";
+import { withProdApp } from "../test_utils/with-prod-app.js";
+import { LogoutURL, SignInURL } from "./urls.js";
 
 describe("Logout", () => {
 	let page: Page;

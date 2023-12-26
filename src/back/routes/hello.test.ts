@@ -1,6 +1,6 @@
-import { withProdApp } from "../test_utils/with-prod-app";
-import { VERY_LONG_TEST_TIMEOUT, webhintURL } from "../test_utils/webhint";
-import { HelloURL } from "./urls";
+import { VERY_LONG_TEST_TIMEOUT, webhintURL } from "../test_utils/webhint.js";
+import { withProdApp } from "../test_utils/with-prod-app.js";
+import { HelloURL } from "./urls.js";
 
 describe("Hello", () => {
 	it("doesn't crash", async function () {

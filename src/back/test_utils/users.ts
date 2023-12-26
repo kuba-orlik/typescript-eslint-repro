@@ -1,6 +1,6 @@
-import { Users } from "../collections/collections";
 import { CollectionItem, TestUtils } from "sealious";
-import TheApp from "../app";
+import TheApp from "../app.js";
+import Users from "../collections/users.js";
 
 type Unpromisify<T> = T extends Promise<infer R> ? R : T;
 
@@ -16,9 +16,7 @@ export function createAUser(app: TheApp, username: string) {
 export async function createAdmin(
 	app: TheApp,
 	rest_api: TestUtils.MockRestApi
-): Promise<
-	[CollectionItem<typeof Users>, Unpromisify<ReturnType<typeof rest_api.login>>]
-> {
+): Promise<[CollectionItem<Users>, Unpromisify<ReturnType<typeof rest_api.login>>]> {
 	const user = await createAUser(app, "super_user");
 	await app.collections["user-roles"].suCreate({
 		user: user.id,

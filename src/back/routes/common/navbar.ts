@@ -1,5 +1,5 @@
 import { BaseContext } from "koa";
-import { SignUpURL, SignInURL, TodoURL, LogoutURL } from "../urls";
+import { SignUpURL, SignInURL, TodoURL, LogoutURL } from "../urls.js";
 
 export default async function navbar(ctx: BaseContext) {
 	const isLoggedIn = !!ctx.$context.session_id;
@@ -17,7 +17,7 @@ export default async function navbar(ctx: BaseContext) {
 	const linksHTML = linkData
 		.map((link) =>
 			link.url === new URL(ctx.url, "https://a.com").pathname
-				? `<li>${link.text}</li>`
+				? `<li class="active"><span>${link.text}</span></li>`
 				: /* HTML */ `<li><a href="${link.url}">${link.text}</a></li>`
 		)
 		.join("\n");
@@ -30,7 +30,7 @@ export default async function navbar(ctx: BaseContext) {
 				width="50"
 				height="50"
 			/>
-			Sealious App
+			${ctx.$app.manifest.name}
 		</a>
 		<ul>
 			${linksHTML}

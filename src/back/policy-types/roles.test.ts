@@ -1,4 +1,4 @@
-import { withProdApp } from "../test_utils/with-prod-app";
+import { withProdApp } from "../test_utils/with-prod-app.js";
 
 describe("roles", () => {
 	it("allows access to users with designated role and denies access to users without it", async () =>

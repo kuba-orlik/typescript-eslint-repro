@@ -1,4 +1,4 @@
-import html from "../../html";
+import html from "../../html.js";
 import { BaseContext } from "koa";
 import { Readable } from "stream";
 import { tempstream } from "tempstream";

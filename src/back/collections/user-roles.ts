@@ -1,5 +1,5 @@
 import { App, Collection, FieldTypes, Policies, Policy } from "sealious";
-import { Roles } from "../policy-types/roles";
+import { Roles } from "../policy-types/roles.js";
 
 export default class UserRoles extends Collection {
 	name = "user-roles";

@@ -1,13 +1,13 @@
 // DO NOT EDIT! This file is generated automaticaly with 'npm run generate-collections'
 import { App } from "sealious";
 
-import _GroupsToUsers from "./groups-to-users";
-import _Groups from "./groups";
-import _PasswordResetIntents from "./password-reset-intents";
-import _Secrets from "./secrets";
-import _Tasks from "./tasks";
-import _UserRoles from "./user-roles";
-import _Users from "./users";
+import _GroupsToUsers from "./groups-to-users.js";
+import _Groups from "./groups.js";
+import _PasswordResetIntents from "./password-reset-intents.js";
+import _Secrets from "./secrets.js";
+import _Tasks from "./tasks.js";
+import _UserRoles from "./user-roles.js";
+import _Users from "./users.js";
 
 export const GroupsToUsers = new _GroupsToUsers();
 export const Groups = new _Groups();

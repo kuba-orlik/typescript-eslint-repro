@@ -1,9 +1,9 @@
-import { withProdApp } from "../test_utils/with-prod-app";
-import { VERY_LONG_TEST_TIMEOUT, webhintURL } from "../test_utils/webhint";
-import { SignInURL, LogoutURL } from "./urls";
 import { Browser, BrowserContext, Page } from "@playwright/test";
-import { getBrowser } from "../test_utils/browser-creator";
-import ADMIN_CREDENTIALS from "../default-admin-credentials";
+import ADMIN_CREDENTIALS from "../default-admin-credentials.js";
+import { getBrowser } from "../test_utils/browser-creator.js";
+import { VERY_LONG_TEST_TIMEOUT, webhintURL } from "../test_utils/webhint.js";
+import { withProdApp } from "../test_utils/with-prod-app.js";
+import { LogoutURL, SignInURL } from "./urls.js";
 
 describe("SignIn", () => {
 	let page: Page;
