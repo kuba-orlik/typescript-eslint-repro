@@ -12,10 +12,12 @@
 		"watch": "multiple-scripts-tmux -p watch",
 		"reset-db": "docker-compose down && docker-compose up -d",
 		"install-test-deps": "npx playwright install firefox",
-		"test": "npm run install-test-deps && TS_NODE_PROJECT='./src/back/tsconfig.json' mocha --recursive --timeout 20000  --require ts-node/register --require mocha_root_hooks.js src/back/app.ts src/back/**/*.test.ts src/back/**/**/*.test.ts src/back/**/**/**/*.test.ts src/back/**/**/**/**/*.test.ts",
-		"coverage": "nyc npm run test --",
+		"test-cmd": "vitest --config ./src/back/vitest.config.ts",
+		"test-cmd-once": "vitest run --config ./src/back/vitest.config.ts",
+		"test": "npm run test-cmd -- --ui",
+		"coverage": "npm run test --coverage",
 		"postinstall": "sealgen make-env",
-		"test-reports": "docker-compose up -d && ./npm.sh run coverage -- --reporter xunit --reporter-option output=.xunit",
+		"test-reports": "npm run test-cmd-once -- --coverage",
 		"show-coverage": "npm run test-reports;  xdg-open coverage/index.html"
 	},
 	"tmux-scripts": {
@@ -36,59 +38,42 @@
 		"@sealcode/sealgen": "^0.9.0",
 		"@sealcode/ts-predicates": "^0.4.3",
 		"@types/kill-port": "^2.0.0",
+		"get-port": "^7.0.0",
 		"hint": "^7.0.1",
-		"locreq": "^2.0.2",
+		"locreq": "^3.0.0",
 		"multiple-scripts-tmux": "^1.0.4",
 		"nodemon": "^3.0.1",
 		"sealious": "^0.17.37",
 		"stimulus": "^2.0.0",
-		"tempstream": "^0.0.21"
+		"tempstream": "^0.0.21",
+		"vitest": "^1.1.0"
 	},
 	"devDependencies": {
 		"@hint/connector-jsdom": "^4.1.20",
 		"@hint/formatter-codeframe": "^3.1.29",
 		"@hint/hint-doctype": "^3.3.19",
 		"@hint/hint-no-broken-links": "^4.2.19",
-		"@istanbuljs/nyc-config-typescript": "^1.0.2",
 		"@sealcode/ansi-html-stream": "^1.0.1",
 		"@types/koa__router": "^12.0.4",
-		"@types/mocha": "^9.1.1",
 		"@types/node": "^20.8.4",
 		"@types/tedious": "^4.0.7",
 		"@typescript-eslint/eslint-plugin": "^5.10.0",
 		"@typescript-eslint/parser": "^5.10.2",
-		"axios": "^0.24.0",
+		"@vitest/coverage-istanbul": "^1.1.0",
+		"@vitest/coverage-v8": "^1.1.0",
+		"@vitest/ui": "^1.1.0",
+		"axios": "^1.6.2",
 		"eslint": "^7.19.0",
 		"eslint-config-prettier": "^7.2.0",
 		"eslint-plugin-prettier": "^3.3.1",
 		"eslint-plugin-with-tsc-error": "^0.0.7",
 		"kill-port": "^1.6.1",
-		"mocha": "^8.4.0",
 		"mri": "^1.1.6",
 		"nyc": "^15.1.0",
 		"prettier": "^2.2.1",
 		"ts-loader": "^8.0.14",
-		"ts-node": "^10.4.0",
+		"ts-node": "^10.9.2",
 		"typescript": "^4.7"
-	},
-	"nyc": {
-		"extends": "@istanbuljs/nyc-config-typescript",
-		"check-coverage": false,
-		"all": true,
-		"include": [
-			"src/**/!(*.test.*).[tj]s?(x)"
-		],
-		"exclude": [
-			"src/_tests_/**/*.*"
-		],
-		"reporter": [
-			"html",
-			"lcov",
-			"clover",
-			"text",
-			"text-summary"
-		],
-		"report-dir": "coverage"
 	},
 	"engines": {
 		"node": ">=17.0.0"

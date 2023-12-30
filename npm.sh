@@ -2,6 +2,8 @@
 
 # the "--no-TTY" option is crucial - without it the output is not captured in Jenkins
 
+./docker-up.sh
+
 CONTAINER_ID=$(docker-compose run \
 	-d \
 	--service-ports \

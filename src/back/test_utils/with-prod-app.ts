@@ -1,12 +1,21 @@
 import _locreq from "locreq";
 import { v4 as uuid } from "uuid";
 
-const locreq = _locreq.default(module_dirname(import.meta.url));
+const locreq = _locreq(module_dirname(import.meta.url));
 import { SMTPMailer } from "sealious";
 import { TestUtils } from "sealious";
-import TheApp from "../app.js";
+import TheApp, {
+	MAILCATCHER_API_PORT,
+	MAILCATCHER_HOST,
+	MAILCATCHER_SMTP_PORT,
+} from "../app.js";
 import { mainRouter } from "../routes/index.js";
 import { module_dirname } from "../util.js";
+import getPort from "get-port";
+
+const port_numbers = async function* () {
+	yield await getPort();
+};
 
 export async function withProdApp(
 	callback: (args: {
@@ -17,18 +26,17 @@ export async function withProdApp(
 	}) => Promise<void>
 ) {
 	const app = new TheApp();
-	const port = 9999;
+	const port = (await port_numbers().next()).value as number;
 
 	app.config["www-server"].port = port;
 	app.config.datastore_mongo = {
-		host: "db",
-		port: 27017,
+		...app.config.datastore_mongo,
 		db_name: "sealious-app-test" + uuid(),
 	};
 	app.config.logger.level = <const>"none";
 	app.mailer = new SMTPMailer({
-		host: "mailcatcher",
-		port: 1025,
+		host: "127.0.0.1",
+		port: MAILCATCHER_SMTP_PORT,
 		user: "any",
 		password: "any",
 	});
@@ -39,7 +47,10 @@ export async function withProdApp(
 
 	await app.start();
 	const base_url = `http://127.0.0.1:${port}`;
-	const mail_api = new TestUtils.MailcatcherAPI("http://mailcatcher:1080", app);
+	const mail_api = new TestUtils.MailcatcherAPI(
+		`http://${MAILCATCHER_HOST}:${MAILCATCHER_API_PORT}`,
+		app
+	);
 	await mail_api.deleteAllInstanceEmails();
 
 	async function stop() {

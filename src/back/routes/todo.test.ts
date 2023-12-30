@@ -6,6 +6,23 @@ import { LONG_TEST_TIMEOUT, VERY_LONG_TEST_TIMEOUT } from "../test_utils/webhint
 import { withProdApp } from "../test_utils/with-prod-app.js";
 import { SignInURL, TodoURL } from "./urls.js";
 
+describe("Todo webhint", () => {
+	it(
+		"doesn't crash",
+		async function () {
+			return withProdApp(async ({ rest_api }) => {
+				await assert.rejects(
+					async () => {
+						await rest_api.get(TodoURL);
+					},
+					{ name: "Error" }
+				);
+			});
+		},
+		VERY_LONG_TEST_TIMEOUT
+	);
+});
+
 describe("Todo", function () {
 	let page: Page;
 	let browser: Browser;
@@ -23,59 +40,55 @@ describe("Todo", function () {
 		await context.close();
 	});
 
-	it("doesn't crash", async function () {
-		this.timeout(VERY_LONG_TEST_TIMEOUT);
-		return withProdApp(async ({ rest_api }) => {
-			await assert.rejects(
-				async () => {
-					await rest_api.get(TodoURL);
-				},
-				{ name: "Error" }
-			);
-		});
-	});
-
 	describe("todo test", () => {
-		it("create and delete task", async function () {
-			await withProdApp(async ({ base_url }) => {
-				this.timeout(VERY_LONG_TEST_TIMEOUT);
-				await page.goto(base_url);
-				await page.getByRole("link", { name: "Sign in" }).click();
-				await page.getByPlaceholder("text").click();
-				await page.getByPlaceholder("text").fill(username);
-				await page.getByPlaceholder("text").press("Tab");
-				await page.getByPlaceholder("password").fill(password);
-				await page.getByPlaceholder("password").press("Enter");
-				await page.getByRole("link", { name: "To do app" }).click();
-				await page.getByPlaceholder("Write an Matrix bot").click();
-				await page.getByPlaceholder("Write an Matrix bot").fill("randomtasdk");
-				await page.getByRole("button", { name: "Wyślij" }).click();
-				await page.waitForSelector(".form-message.form-message--success");
-				await page.locator("turbo-frame").getByRole("checkbox").check();
-				await page.locator("turbo-frame").getByRole("checkbox").uncheck();
-				await page
-					.locator("turbo-frame")
-					.getByRole("button", { name: "Delete" })
-					.click();
-				await page.getByRole("link", { name: "Logout" }).click();
-				await page.waitForSelector(`a[href="${SignInURL}"]`);
-			});
-		});
+		it(
+			"create and delete task",
+			async function () {
+				await withProdApp(async ({ base_url }) => {
+					await page.goto(base_url);
+					await page.getByRole("link", { name: "Sign in" }).click();
+					await page.getByPlaceholder("text").click();
+					await page.getByPlaceholder("text").fill(username);
+					await page.getByPlaceholder("text").press("Tab");
+					await page.getByPlaceholder("password").fill(password);
+					await page.getByPlaceholder("password").press("Enter");
+					await page.getByRole("link", { name: "To do app" }).click();
+					await page.getByPlaceholder("Write an Matrix bot").click();
+					await page
+						.getByPlaceholder("Write an Matrix bot")
+						.fill("randomtasdk");
+					await page.getByRole("button", { name: "Wyślij" }).click();
+					await page.waitForSelector(".form-message.form-message--success");
+					await page.locator("turbo-frame").getByRole("checkbox").check();
+					await page.locator("turbo-frame").getByRole("checkbox").uncheck();
+					await page
+						.locator("turbo-frame")
+						.getByRole("button", { name: "Delete" })
+						.click();
+					await page.getByRole("link", { name: "Logout" }).click();
+					await page.waitForSelector(`a[href="${SignInURL}"]`);
+				});
+			},
+			VERY_LONG_TEST_TIMEOUT
+		);
 	});
 
 	describe("can access test", () => {
-		it("access url", async function () {
-			await withProdApp(async ({ base_url }) => {
-				this.timeout(LONG_TEST_TIMEOUT);
-				await page.goto(base_url);
-				try {
-					await page.waitForSelector(`a[href="${SignInURL}"]`);
-					await page.goto(base_url + TodoURL);
-					await page.waitForSelector('body:has-text("no access")');
-				} catch (error) {
-					console.error(error);
-				}
-			});
-		});
+		it(
+			"access url",
+			async function () {
+				await withProdApp(async ({ base_url }) => {
+					await page.goto(base_url);
+					try {
+						await page.waitForSelector(`a[href="${SignInURL}"]`);
+						await page.goto(base_url + TodoURL);
+						await page.waitForSelector('body:has-text("no access")');
+					} catch (error) {
+						console.error(error);
+					}
+				});
+			},
+			LONG_TEST_TIMEOUT
+		);
 	});
 });

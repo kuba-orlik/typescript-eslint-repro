@@ -14,7 +14,9 @@
 		"allowJs": true,
 		"resolveJsonModule": true,
 		"sourceMap": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"types": ["vitest/globals"]
 	},
-	"include": ["./**/*", "./*"]
+	"include": ["./**/*", "./*"],
+	"ts-node": { "experimentalResolver": true, "esm": true }
 }

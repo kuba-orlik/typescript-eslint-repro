@@ -1,5 +1,5 @@
 import _locreq from "locreq";
-const locreq = _locreq.default(__dirname);
+const locreq = _locreq(__dirname);
 import { spawn } from "child_process";
 import { hasShape, is, predicates } from "@sealcode/ts-predicates";
 import { promises as fs } from "fs";

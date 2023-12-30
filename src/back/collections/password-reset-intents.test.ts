@@ -2,6 +2,7 @@ import axios from "axios";
 import assert from "assert";
 import TheApp from "../app.js";
 import { withProdApp } from "../test_utils/with-prod-app.js";
+import { LONG_TEST_TIMEOUT } from "../test_utils/webhint.js";
 
 describe("password-reset-intents", function () {
 	//ts-ignore
@@ -14,52 +15,60 @@ describe("password-reset-intents", function () {
 		});
 	}
 
-	it("tells you if the email address doesn't exist", async function () {
-		return withProdApp(async ({ app, base_url }) => {
-			const email = "fake@example.com";
-			try {
-				await axios.default.post(
-					`${base_url}/api/v1/collections/password-reset-intents`,
-					{
-						email: email,
-					}
-				);
-			} catch (e) {
-				assert.equal(
-					e.response.data.data.field_messages.email.message,
-					app.i18n("invalid_existing_value", ["users", "email", email])
-				);
-				return;
-			}
-			throw new Error("it didn't throw");
-		});
-	});
+	it(
+		"tells you if the email address doesn't exist",
+		async function () {
+			return withProdApp(async ({ app, base_url }) => {
+				const email = "fake@example.com";
+				try {
+					await axios.post(
+						`${base_url}/api/v1/collections/password-reset-intents`,
+						{
+							email: email,
+						}
+					);
+				} catch (e) {
+					assert.equal(
+						e.response.data.data.field_messages.email.message,
+						app.i18n("invalid_existing_value", ["users", "email", email])
+					);
+					return;
+				}
+				throw new Error("it didn't throw");
+			});
+		},
+		LONG_TEST_TIMEOUT
+	);
 
-	it("allows anyone to create an intent, if the email exists", async () =>
-		withProdApp(async ({ app, base_url }) => {
-			await createAUser(app);
-			const { email, token } = (
-				await axios.default.post(
-					`${base_url}/api/v1/collections/password-reset-intents`,
+	it(
+		"allows anyone to create an intent, if the email exists",
+		async () =>
+			withProdApp(async ({ app, base_url }) => {
+				await createAUser(app);
+				const { email, token } = (
+					await axios.post(
+						`${base_url}/api/v1/collections/password-reset-intents`,
+						{
+							email: "user@example.com",
+						}
+					)
+				).data;
+				assert.deepEqual(
+					{ email, token },
 					{
 						email: "user@example.com",
+						token: "it's a secret to everybody",
 					}
-				)
-			).data;
-			assert.deepEqual(
-				{ email, token },
-				{
-					email: "user@example.com",
-					token: "it's a secret to everybody",
-				}
-			);
-		}));
+				);
+			}),
+		LONG_TEST_TIMEOUT
+	);
 
 	it("tells you if the email address is malformed", async () =>
 		withProdApp(async ({ app, base_url }) => {
 			const email = "incorrect-address";
 			try {
-				await axios.default.post(
+				await axios.post(
 					`${base_url}/api/v1/collections/password-reset-intents`,
 					{
 						email: email,
@@ -78,12 +87,9 @@ describe("password-reset-intents", function () {
 	it("sends an email with the reset password link", async () =>
 		withProdApp(async ({ app, base_url, mail_api }) => {
 			await createAUser(app);
-			await axios.default.post(
-				`${base_url}/api/v1/collections/password-reset-intents`,
-				{
-					email: "user@example.com",
-				}
-			);
+			await axios.post(`${base_url}/api/v1/collections/password-reset-intents`, {
+				email: "user@example.com",
+			});
 			const messages = (await mail_api.getMessages()).filter(
 				(message) => message.recipients[0] == "<user@example.com>"
 			);

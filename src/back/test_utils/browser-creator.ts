@@ -1,4 +1,4 @@
-import { Browser, firefox } from "@playwright/test";
+import { Browser, BrowserContext, firefox, Page } from "@playwright/test";
 
 let browser: Browser;
 
@@ -13,4 +13,15 @@ export async function closeBrowser() {
 	if (browser) {
 		await browser.close();
 	}
+}
+
+export async function getPage(): Promise<{
+	page: Page;
+	browser: Browser;
+	context: BrowserContext;
+}> {
+	const browser = await getBrowser();
+	const context = await browser.newContext();
+	const page = await context.newPage();
+	return { browser, context, page };
 }

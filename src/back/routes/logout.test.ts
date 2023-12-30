@@ -6,7 +6,7 @@ import { LONG_TEST_TIMEOUT, VERY_LONG_TEST_TIMEOUT } from "../test_utils/webhint
 import { withProdApp } from "../test_utils/with-prod-app.js";
 import { LogoutURL, SignInURL } from "./urls.js";
 
-describe("Logout", () => {
+describe.concurrent("Logout", () => {
 	let page: Page;
 	let browser: Browser;
 	let context: BrowserContext;
@@ -23,33 +23,39 @@ describe("Logout", () => {
 		await context.close();
 	});
 
-	it("doesn't crash", async function () {
-		this.timeout(VERY_LONG_TEST_TIMEOUT);
-		return withProdApp(async ({ rest_api }) => {
-			await assert.rejects(
-				async () => {
-					await rest_api.get(LogoutURL);
-				},
-				{ name: "Error" }
-			);
-		});
-	});
+	it(
+		"doesn't crash",
+		async function () {
+			return withProdApp(async ({ rest_api }) => {
+				await assert.rejects(
+					async () => {
+						await rest_api.get(LogoutURL);
+					},
+					{ name: "Error" }
+				);
+			});
+		},
+		VERY_LONG_TEST_TIMEOUT
+	);
 
 	describe("logout test", () => {
-		it("logout", async function () {
-			await withProdApp(async ({ base_url }) => {
-				this.timeout(LONG_TEST_TIMEOUT);
-				await page.goto(base_url);
-				await page.getByRole("link", { name: "Sign in" }).click();
-				await page.getByPlaceholder("text").click();
-				await page.getByPlaceholder("text").fill(username);
-				await page.getByPlaceholder("text").press("Tab");
-				await page.getByPlaceholder("password").fill(password);
-				await page.getByPlaceholder("password").press("Enter");
-				await page.waitForSelector(`a[href="${LogoutURL}"]`);
-				await page.getByRole("link", { name: "Logout" }).click();
-				await page.waitForSelector(`a[href="${SignInURL}"]`);
-			});
-		});
+		it(
+			"logout",
+			async function () {
+				await withProdApp(async ({ base_url }) => {
+					await page.goto(base_url);
+					await page.getByRole("link", { name: "Sign in" }).click();
+					await page.getByPlaceholder("text").click();
+					await page.getByPlaceholder("text").fill(username);
+					await page.getByPlaceholder("text").press("Tab");
+					await page.getByPlaceholder("password").fill(password);
+					await page.getByPlaceholder("password").press("Enter");
+					await page.waitForSelector(`a[href="${LogoutURL}"]`);
+					await page.getByRole("link", { name: "Logout" }).click();
+					await page.waitForSelector(`a[href="${SignInURL}"]`);
+				});
+			},
+			LONG_TEST_TIMEOUT
+		);
 	});
 });

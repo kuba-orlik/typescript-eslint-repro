@@ -4,14 +4,22 @@ import type { LoggerLevel } from "sealious/@types/src/app/logger.js";
 import { collections } from "./collections/collections.js";
 import ADMIN_CREDENTIALS from "./default-admin-credentials.js";
 import { module_dirname } from "./util.js";
-const locreq = _locreq.default(module_dirname(import.meta.url));
+const locreq = _locreq(module_dirname(import.meta.url));
 
 const PORT = process.env.SEALIOUS_PORT ? parseInt(process.env.SEALIOUS_PORT) : 8080;
 const base_url = process.env.SEALIOUS_BASE_URL || `http://localhost:${PORT}`;
-const MONGO_PORT = process.env.SEALIOUS_MONGO_PORT
+export const MONGO_PORT = process.env.SEALIOUS_MONGO_PORT
 	? parseInt(process.env.SEALIOUS_MONGO_PORT)
 	: 20747;
-const MONGO_HOST = process.env.SEALIOUS_MONGO_HOST || "127.0.0.1";
+export const MONGO_HOST = process.env.SEALIOUS_MONGO_HOST || "127.0.0.1";
+export const MAILCATCHER_HOST = process.env.SEALIOUS_MAILCATCHER_HOST || "127.0.0.1";
+export const MAILCATCHER_SMTP_PORT = parseInt(
+	process.env.SEALIOUS_MAILCATCHER_SMTP_PORT || "1026"
+);
+export const MAILCATCHER_API_PORT = parseInt(
+	process.env.SEALIOUS_MAILCATCHER_API_PORT || "1082"
+);
+export const MAILER = process.env.SEALIOUS_MAILER;
 
 declare module "koa" {
 	interface BaseContext {
@@ -56,10 +64,10 @@ export default class TheApp extends App {
 	};
 	collections = collections;
 	mailer =
-		process.env.SEALIOUS_MAILER === "mailcatcher"
+		MAILER === "mailcatcher"
 			? new SMTPMailer({
-					host: "mailcatcher",
-					port: 1025,
+					host: MAILCATCHER_HOST,
+					port: MAILCATCHER_SMTP_PORT,
 					user: "any",
 					password: "any",
 			  })

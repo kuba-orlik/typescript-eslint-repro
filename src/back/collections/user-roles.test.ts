@@ -4,34 +4,39 @@ import { Context, TestUtils } from "sealious";
 import { withProdApp } from "../test_utils/with-prod-app.js";
 import { createAdmin, createAUser } from "../test_utils/users.js";
 import Users from "./users.js";
+import { LONG_TEST_TIMEOUT } from "../test_utils/webhint.js";
 
 describe("user-roles", () => {
-	it("rejects when given an empty role", async () =>
-		withProdApp(async ({ app, rest_api }) => {
-			const [user, session] = await createAdmin(app, rest_api);
-			await TestUtils.assertThrowsAsync(
-				async () => {
-					return rest_api.post(
-						`/api/v1/collections/user-roles`,
-						{
-							user: user.id,
-						},
-						session
-					);
-				},
-				(e: any) => {
-					assert.equal(
-						e?.response.data.data.field_messages.role?.message,
-						"Missing value for field 'role'."
-					);
-				}
-			);
-		}));
+	it(
+		"rejects when given an empty role",
+		async () =>
+			withProdApp(async ({ app, rest_api }) => {
+				const [user, session] = await createAdmin(app, rest_api);
+				await TestUtils.assertThrowsAsync(
+					async () => {
+						return rest_api.post(
+							`/api/v1/collections/user-roles`,
+							{
+								user: user.id,
+							},
+							session
+						);
+					},
+					(e: any) => {
+						assert.equal(
+							e?.response.data.data.field_messages.role?.message,
+							"Missing value for field 'role'."
+						);
+					}
+				);
+			}),
+		LONG_TEST_TIMEOUT
+	);
 
 	it("accepts correct dataset", async () =>
 		withProdApp(async ({ app, base_url, rest_api }) => {
 			const [user, session] = await createAdmin(app, rest_api);
-			const response = await axios.default.post(
+			const response = await axios.post(
 				`${base_url}/api/v1/collections/user-roles`,
 				{
 					user: user.id,
