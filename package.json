@@ -16,7 +16,7 @@
 		"test-cmd-once": "vitest run --config ./src/back/vitest.config.ts",
 		"test": "npm run test-cmd -- --ui",
 		"coverage": "npm run test --coverage",
-		"postinstall": "sealgen make-env",
+		"postinstall": "sealgen make-env && npm install --prefix webhint",
 		"test-reports": "npm run test-cmd-once -- --coverage",
 		"show-coverage": "npm run test-reports;  xdg-open coverage/index.html"
 	},
@@ -35,11 +35,10 @@
 		"@hotwired/turbo": "^7.1.0",
 		"@koa/router": "^12.0.1",
 		"@playwright/test": "^1.36.1",
-		"@sealcode/sealgen": "^0.9.0",
+		"@sealcode/sealgen": "^0.10.1",
 		"@sealcode/ts-predicates": "^0.4.3",
 		"@types/kill-port": "^2.0.0",
 		"get-port": "^7.0.0",
-		"hint": "^7.0.1",
 		"locreq": "^3.0.0",
 		"multiple-scripts-tmux": "^1.0.4",
 		"nodemon": "^3.0.1",
@@ -49,10 +48,6 @@
 		"vitest": "^1.1.0"
 	},
 	"devDependencies": {
-		"@hint/connector-jsdom": "^4.1.20",
-		"@hint/formatter-codeframe": "^3.1.29",
-		"@hint/hint-doctype": "^3.3.19",
-		"@hint/hint-no-broken-links": "^4.2.19",
 		"@sealcode/ansi-html-stream": "^1.0.1",
 		"@types/koa__router": "^12.0.4",
 		"@types/node": "^20.8.4",
