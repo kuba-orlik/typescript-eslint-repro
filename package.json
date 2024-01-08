@@ -35,7 +35,7 @@
 		"@hotwired/turbo": "^7.1.0",
 		"@koa/router": "^12.0.1",
 		"@playwright/test": "^1.36.1",
-		"@sealcode/sealgen": "^0.10.5",
+		"@sealcode/sealgen": "^0.10.6",
 		"@sealcode/ts-predicates": "^0.4.3",
 		"@types/kill-port": "^2.0.0",
 		"get-port": "^7.0.0",
