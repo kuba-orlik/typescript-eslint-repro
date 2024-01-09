@@ -30,12 +30,13 @@ export default class Users extends Collections.users {
 					"ADMIN",
 					`Creating an admin account for ${app.manifest.admin_email}`
 				);
-				await app.collections.users.suCreate({
+				const { id } = await app.collections.users.suCreate({
 					username,
 					password: ADMIN_CREDENTIALS.password,
 					email: ADMIN_CREDENTIALS.email,
 					roles: [],
 				});
+				await app.collections["user-roles"].suCreate({ user: id, role: "admin" });
 			}
 		});
 	}
