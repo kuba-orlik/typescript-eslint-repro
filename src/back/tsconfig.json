@@ -10,6 +10,8 @@
 		"lib": ["es6", "esnext"],
 		"outDir": "../../dist/back",
 		"keyofStringsOnly": true,
+		"jsx": "react",
+		"reactNamespace": "TempstreamJSX",
 		"checkJs": false,
 		"allowJs": true,
 		"resolveJsonModule": true,

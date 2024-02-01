@@ -17,7 +17,7 @@
 		"test": "npm run test-cmd -- --ui",
 		"coverage": "npm run test --coverage",
 		"postinstall": "sealgen make-env && npm install --prefix webhint",
-		"test-reports": "npm run test-cmd-once -- --coverage",
+		"test-reports": "rm -f .xunit && npm run test-cmd-once -- --coverage --reporter=junit --outputFile=.xunit",
 		"show-coverage": "npm run test-reports;  xdg-open coverage/index.html"
 	},
 	"tmux-scripts": {
@@ -35,7 +35,7 @@
 		"@hotwired/turbo": "^7.1.0",
 		"@koa/router": "^12.0.1",
 		"@playwright/test": "^1.36.1",
-		"@sealcode/sealgen": "^0.10.6",
+		"@sealcode/sealgen": "^0.11.0",
 		"@sealcode/ts-predicates": "^0.4.3",
 		"@types/kill-port": "^2.0.0",
 		"get-port": "^7.0.0",
@@ -44,7 +44,7 @@
 		"nodemon": "^3.0.1",
 		"sealious": "^0.17.48",
 		"stimulus": "^2.0.0",
-		"tempstream": "^0.0.21",
+		"tempstream": "^0.3.0",
 		"vitest": "^1.1.0"
 	},
 	"devDependencies": {

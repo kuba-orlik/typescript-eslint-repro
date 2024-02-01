@@ -23,6 +23,14 @@ npm run watch
 
 ## Testing
 
+First time after installing the project run this command to download firefox
+
+```
+npx playwright install firefox
+```
+
+And then
+
 ```
 ./npm.sh run test
 ```
