@@ -14,5 +14,7 @@ export default defineConfig({
 			all: true,
 			include: ["src/**", "test?(-*).?(c|m)[jt]s?(x)"],
 		},
+		reporters: ["junit"],
+		outputFile: ".xunit",
 	},
 });
