@@ -21,6 +21,14 @@ docker-compose up -d db mailcatcher
 npm run watch
 ```
 
+## Adding a component
+
+```
+npx sealgen add-component
+```
+
+And then go to `localhost:8080/components` to preview your custom component
+
 ## Testing
 
 First time after installing the project run this command to download firefox
