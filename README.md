@@ -8,7 +8,7 @@
 ## Installation
 
 ```
-./npm.sh install
+npm install
 ```
 
 Always use ./npm.sh when installing dependencies.
