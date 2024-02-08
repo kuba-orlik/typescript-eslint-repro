@@ -4,14 +4,15 @@ import { v4 as uuid } from "uuid";
 const locreq = _locreq(module_dirname(import.meta.url));
 import { SMTPMailer } from "sealious";
 import { TestUtils } from "sealious";
-import TheApp, {
-	MAILCATCHER_API_PORT,
-	MAILCATCHER_HOST,
-	MAILCATCHER_SMTP_PORT,
-} from "../app.js";
+import TheApp from "../app.js";
 import { mainRouter } from "../routes/index.js";
 import { module_dirname } from "../util.js";
 import getPort from "get-port";
+import {
+	MAILCATCHER_API_PORT,
+	MAILCATCHER_HOST,
+	MAILCATCHER_SMTP_PORT,
+} from "../config.js";
 
 const port_numbers = async function* () {
 	yield await getPort();

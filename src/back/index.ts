@@ -1,16 +1,19 @@
 import kill from "kill-port";
 import _locreq from "locreq";
 import TheApp from "./app.js";
+import { SEALIOUS_SANITY } from "./config.js";
 import { mainRouter } from "./routes/index.js";
 import { module_dirname } from "./util.js";
 const locreq = _locreq(module_dirname(import.meta.url));
 
 const app = new TheApp();
 
+console.log({ SEALIOUS_SANITY });
+
 kill(app.config["www-server"].port)
 	.then(() => app.start())
 	.then(async () => {
-		if (process.env.SEALIOUS_SANITY === "true") {
+		if (SEALIOUS_SANITY) {
 			console.error("Exiting with error code 0");
 			process.exit(0);
 		}
@@ -18,7 +21,7 @@ kill(app.config["www-server"].port)
 	})
 	.catch((error) => {
 		console.error(error);
-		if (process.env.SEALIOUS_SANITY === "true") {
+		if (SEALIOUS_SANITY) {
 			console.error("EXITING WITH STATUS 1");
 			process.exit(1);
 		}

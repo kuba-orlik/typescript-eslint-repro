@@ -2,24 +2,18 @@ import _locreq from "locreq";
 import Sealious, { App, LoggerMailer, SMTPMailer } from "sealious";
 import type { LoggerLevel } from "sealious/@types/src/app/logger.js";
 import { collections } from "./collections/collections.js";
+import {
+	BASE_URL,
+	MAILCATCHER_HOST,
+	MAILCATCHER_SMTP_PORT,
+	MAILER,
+	MONGO_HOST,
+	MONGO_PORT,
+	PORT,
+} from "./config.js";
 import ADMIN_CREDENTIALS from "./default-admin-credentials.js";
 import { module_dirname } from "./util.js";
 const locreq = _locreq(module_dirname(import.meta.url));
-
-const PORT = process.env.SEALIOUS_PORT ? parseInt(process.env.SEALIOUS_PORT) : 8080;
-const base_url = process.env.SEALIOUS_BASE_URL || `http://localhost:${PORT}`;
-export const MONGO_PORT = process.env.SEALIOUS_MONGO_PORT
-	? parseInt(process.env.SEALIOUS_MONGO_PORT)
-	: 20747;
-export const MONGO_HOST = process.env.SEALIOUS_MONGO_HOST || "127.0.0.1";
-export const MAILCATCHER_HOST = process.env.SEALIOUS_MAILCATCHER_HOST || "127.0.0.1";
-export const MAILCATCHER_SMTP_PORT = parseInt(
-	process.env.SEALIOUS_MAILCATCHER_SMTP_PORT || "1026"
-);
-export const MAILCATCHER_API_PORT = parseInt(
-	process.env.SEALIOUS_MAILCATCHER_API_PORT || "1082"
-);
-export const MAILER = process.env.SEALIOUS_MAILER;
 
 declare module "koa" {
 	interface BaseContext {
@@ -56,7 +50,7 @@ export default class TheApp extends App {
 		logo: locreq.resolve("assets/logo.png"),
 		version: "0.0.1",
 		default_language: "en",
-		base_url,
+		base_url: BASE_URL,
 		admin_email: ADMIN_CREDENTIALS.email,
 		colors: {
 			primary: "#5294a1",
