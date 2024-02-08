@@ -1,3 +1,4 @@
+export const ComponentsURL = "/components/";
 export const HelloURL = "/hello/";
 export const LogoutURL = "/logout/";
 export const SignInURL = "/signIn/";

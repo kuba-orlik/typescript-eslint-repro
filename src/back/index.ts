@@ -8,8 +8,6 @@ const locreq = _locreq(module_dirname(import.meta.url));
 
 const app = new TheApp();
 
-console.log({ SEALIOUS_SANITY });
-
 kill(app.config["www-server"].port)
 	.then(() => app.start())
 	.then(async () => {

@@ -35,8 +35,8 @@
 		"@hotwired/turbo": "^7.1.0",
 		"@koa/router": "^12.0.1",
 		"@playwright/test": "^1.36.1",
-		"@sealcode/jdd": "^0.1.0",
-		"@sealcode/sealgen": "^0.11.0",
+		"@sealcode/jdd": "^0.2.4",
+		"@sealcode/sealgen": "^0.11.1",
 		"@sealcode/ts-predicates": "^0.4.3",
 		"@types/kill-port": "^2.0.0",
 		"get-port": "^7.0.0",
@@ -45,7 +45,7 @@
 		"nodemon": "^3.0.1",
 		"sealious": "^0.17.48",
 		"stimulus": "^2.0.0",
-		"tempstream": "^0.3.0",
+		"tempstream": "^0.3.2",
 		"vitest": "^1.1.0"
 	},
 	"devDependencies": {
