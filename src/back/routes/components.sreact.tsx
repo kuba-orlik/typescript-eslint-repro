@@ -7,21 +7,7 @@ import { render, simpleJDDContext } from "@sealcode/jdd";
 
 export const actionName = "Components";
 
-const actions = {
-	add: (state: State, inputs: Record<string, string>) => {
-		console.log({ inputs });
-		return {
-			...state,
-			elements: [...state.elements, inputs.element_to_add || "new element"],
-		};
-	},
-	remove: (state: State, _: unknown, index_to_remove: number) => {
-		return {
-			...state,
-			elements: state.elements.filter((_, index) => index != index_to_remove),
-		};
-	},
-} as const;
+const actions = {} as const;
 
 type State = {
 	component: string;
