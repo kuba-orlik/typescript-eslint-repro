@@ -17,7 +17,7 @@ Always use ./npm.sh when installing dependencies.
 
 ```
 npx sealgen make-env
-docker-compose up -d
+docker-compose up -d db mailcatcher
 npm run watch
 ```
 
