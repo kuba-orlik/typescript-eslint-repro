@@ -65,6 +65,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 		return html(ctx, "Components", content, {
 			morphing: true,
 			preserveScroll: true,
+			autoRefreshCSS: true,
 			navbar: () => ``,
 		});
 	}

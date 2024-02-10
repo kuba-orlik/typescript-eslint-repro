@@ -15,13 +15,14 @@ export type HTMLOptions = {
 	preserveScroll?: boolean;
 	morphing?: boolean;
 	navbar?: (ctx: BaseContext) => FlatTemplatable;
+	autoRefreshCSS?: boolean;
 };
 
 export default function html(
 	ctx: BaseContext,
 	title: string,
 	body: Templatable,
-	{ preserveScroll, morphing, navbar }: HTMLOptions = {},
+	{ preserveScroll, morphing, navbar, autoRefreshCSS }: HTMLOptions = {},
 	makeHead: (ctx: BaseContext, title: string) => Templatable = defaultHead
 ): Readable {
 	ctx.set("content-type", "text/html;charset=utf-8");
@@ -36,6 +37,25 @@ export default function html(
 			</head>
 			<body>
 				${(navbar || default_navbar)(ctx)} ${body}
+				${autoRefreshCSS
+					? /* HTML */ `<script>
+							function refresh_css() {
+								Array.from(document.querySelectorAll("link"))
+									.filter(
+										(e) =>
+											new URL(e.href).pathname == "/dist/main.css"
+									)
+									.forEach((e) => {
+										const url = new URL(e.href);
+										url.search =
+											"?" + Math.random() + "" + Math.random();
+										e.href = url.toString();
+									});
+							}
+							const socket = new WebSocket("ws://localhost:60808");
+							socket.onmessage = refresh_css;
+					  </script>`
+					: ""}
 			</body>
 		</html>`;
 }
