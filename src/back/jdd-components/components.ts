@@ -5,6 +5,3 @@ export const registry = new Registry();
 
 import { NiceBox } from "./nice-box/nice-box.jdd.js";
 registry.add("nice-box", NiceBox);
-
-import { UsingImages } from "./using-images/using-images.jdd.js";
-registry.add("using-images", UsingImages);

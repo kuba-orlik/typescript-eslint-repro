@@ -1,0 +1,27 @@
+.title--components {
+	body {
+		max-width: none;
+	}
+
+	.two-column {
+		display: grid;
+		grid-template-columns: min-content 15px 1fr;
+	}
+
+	.resize-gutter {
+		background-color: gray;
+		cursor: ew-resize;
+		height: 100%;
+	}
+
+	.resizable {
+		width: var(--resizable-column-width);
+		overflow-x: auto;
+	}
+}
+
+.component-preview-parameters {
+	fieldset {
+		background-color: #80808024;
+	}
+}
