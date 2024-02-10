@@ -102,7 +102,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 						label: "➕",
 					},
 					arg_path,
-					arg.item_type.getEmptyValue()
+					arg.item_type.getExampleValue()
 				)}
 			</fieldset>
 		);
@@ -236,7 +236,9 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 								state,
 								[arg_name],
 								arg,
-								state.args[arg_name]
+								state.args[arg_name] === undefined
+									? arg.getExampleValue()
+									: state.args[arg_name]
 							)
 						)}
 						<input type="submit" value="Preview" />
