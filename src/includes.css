@@ -1,0 +1,6 @@
+/*  DO NOT EDIT! This file is generated automaticaly with npx sealgen generate-scss-includes */
+
+@import "../node_modules/@sealcode/sealgen/src/forms/forms.css";
+@import "back/jdd-components/using-images/using-images.css";
+@import "back/routes/common/ui/input.css";
+@import "tables.css";

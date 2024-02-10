@@ -1,3 +1,5 @@
+@import "includes.css";
+
 html {
 	background: #eee;
 	font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
@@ -25,4 +27,4 @@ body {
 	align-items: center;
 }
 
-@import "includes.scss";
+

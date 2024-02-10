@@ -8,7 +8,7 @@ export const defaultHead = (ctx: BaseContext, title: string) => /* HTML */ `<tit
 	</title>
 	<meta name="viewport" content="width=device-width" />
 	<script async src="/dist/bundle.js"></script>
-	<link href="/dist/style.css" rel="stylesheet" type="text/css" />`;
+	<link href="/dist/main.css" rel="stylesheet" type="text/css" />`;
 
 export default function html(
 	ctx: BaseContext,
