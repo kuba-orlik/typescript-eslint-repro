@@ -219,7 +219,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 		const component =
 			registry.get(state.component) || Object.values(all_components)[0];
 		return (
-			<div class="two-column">
+			<div class="two-column" id="component-debugger">
 				<div class="resizable">
 					{/*The below button has to be here in order for it to be the default behavior */}
 					<input type="submit" value="Preview" />
@@ -282,7 +282,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 						})();
 					</script>`
 				}
-				<div>
+				<div class="component-preview">
 					<fieldset>
 						<legend>Preview</legend>
 						{render(
@@ -292,13 +292,17 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 						)}
 					</fieldset>
 				</div>
+				{
+					/* HTML */ `<script>
+						document.documentElement.addEventListener("ts-rebuilt", () => {
+							document
+								.querySelector("#component-debugger")
+								.closest("form")
+								.requestSubmit();
+						});
+					</script>`
+				}
 			</div>
 		);
 	}
-
-	// wrapInForm(state: State, content: Templatable): Templatable {
-	// 	return tempstream/* HTML */ `<turbo-frame id="components">
-	// 		${super.wrapInForm(state, content)}
-	// 	</turbo-frame> `;
-	// }
 })();

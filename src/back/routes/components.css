@@ -18,10 +18,22 @@
 		width: var(--resizable-column-width);
 		overflow-x: auto;
 	}
+
+	transition: transform 200ms, opacity 200ms;
+	&.restarting {
+		transform: scale(0.99);
+		opacity: 0.6;
+	}
 }
 
 .component-preview-parameters {
 	fieldset {
 		background-color: #80808024;
+	}
+}
+
+.component-preview {
+	* {
+		transition: all 200ms;
 	}
 }

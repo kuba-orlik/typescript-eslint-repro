@@ -79,12 +79,68 @@ export default function html(
 								"turbo:morph",
 								cleanup_css
 							);
-							const socket = new WebSocket("ws://localhost:60808");
-							socket.onmessage = () => {
-								const new_link = make_new_link();
-								new_link.onload = cleanup_css;
-								document.querySelector("head").appendChild(new_link);
-							};
+
+							const sleep = (time) =>
+								new Promise((resolve) => {
+									setTimeout(resolve, time);
+								});
+
+							let last_known_start_timestamp = 0;
+
+							async function wait_for_app_restart() {
+								while (true) {
+									const { started_at, status } = await fetch(
+										"/status.json"
+									)
+										.then((r) => r.json())
+										.catch(() => ({
+											started_at: last_known_start_timestamp,
+										}));
+									if (started_at !== last_known_start_timestamp) {
+										last_known_start_timestamp = started_at;
+										return;
+									}
+									await sleep(100);
+								}
+							}
+
+							(async function () {
+								const { started_at, status } = await fetch(
+									"/status.json"
+								).then((r) => r.json());
+								last_known_start_timestamp = started_at;
+								const { port, watch } = await fetch(
+									"/dist/notifier.json"
+								).then((r) => r.json());
+								if (!watch) {
+									console.warning(
+										"Not running auto refresh on watch because the build process is not running in watch mode"
+									);
+									return;
+								}
+								const socket = new WebSocket(\`ws://localhost:\${port}\`);
+								socket.onmessage = async (message) => {
+									if (message.data === "css") {
+										const new_link = make_new_link();
+										new_link.onload = cleanup_css;
+										document
+											.querySelector("head")
+											.appendChild(new_link);
+									}
+									if (message.data === "ts") {
+										document.documentElement.classList.add(
+											"restarting"
+										);
+										await wait_for_app_restart();
+										document.documentElement.dispatchEvent(
+											new Event("ts-rebuilt")
+										);
+										document.documentElement.classList.remove(
+											"restarting"
+										);
+									}
+								};
+							})();
 					  </script>`
 					: ""}
 			</body>
