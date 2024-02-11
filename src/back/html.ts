@@ -4,12 +4,24 @@ import { BaseContext } from "koa";
 import { default as default_navbar } from "./routes/common/navbar.js";
 import { toKebabCase } from "js-convert-case";
 
-export const defaultHead = (ctx: BaseContext, title: string) => /* HTML */ `<title>
-		${title} · ${ctx.$app.manifest.name}
-	</title>
+export const defaultHead = (
+	ctx: BaseContext,
+	title: string,
+	options: HTMLOptions
+) => /* HTML */ `<title>${title} · ${ctx.$app.manifest.name}</title>
 	<meta name="viewport" content="width=device-width" />
 	<script async src="/dist/bundle.js"></script>
-	<link href="/dist/main.css" rel="stylesheet" type="text/css" />`;
+	<link
+		href="/dist/main.css${options.autoRefreshCSS
+			? `?${Math.random()}${Math.random()}`
+			: ""}"
+		rel="stylesheet"
+		type="text/css"
+	/>
+	${options.morphing ? `<meta name="turbo-refresh-method" content="morph" />` : ""}
+	${options.preserveScroll
+		? `<meta name="turbo-refresh-scroll" content="preserve">`
+		: ""}`;
 
 export type HTMLOptions = {
 	preserveScroll?: boolean;
@@ -22,22 +34,22 @@ export default function html(
 	ctx: BaseContext,
 	title: string,
 	body: Templatable,
-	{ preserveScroll, morphing, navbar, autoRefreshCSS }: HTMLOptions = {},
-	makeHead: (ctx: BaseContext, title: string) => Templatable = defaultHead
+	htmlOptions: HTMLOptions = {},
+	makeHead: (
+		ctx: BaseContext,
+		title: string,
+		options: HTMLOptions
+	) => Templatable = defaultHead
 ): Readable {
 	ctx.set("content-type", "text/html;charset=utf-8");
 	return tempstream/* HTML */ ` <!DOCTYPE html>
 		<html lang="pl" class="title--${toKebabCase(title)}">
 			<head>
-				${makeHead(ctx, title)}
-				${morphing ? `<meta name="turbo-refresh-method" content="morph" />` : ""}
-				${preserveScroll
-					? `<meta name="turbo-refresh-scroll" content="preserve">`
-					: ""}
+				${makeHead(ctx, title, htmlOptions)}
 			</head>
 			<body>
-				${(navbar || default_navbar)(ctx)} ${body}
-				${autoRefreshCSS
+				${(htmlOptions.navbar || default_navbar)(ctx)} ${body}
+				${htmlOptions.autoRefreshCSS
 					? /* HTML */ `<script>
 							function make_new_link() {
 								const new_link = document.createElement("link");
@@ -55,30 +67,24 @@ export default function html(
 								);
 							}
 
-							function refresh_css() {
-								const new_link = make_new_link();
-
-								//only remove old css once the new one is loaded to prevent blink of unstyled content
-								new_link.onload = () => {
-									console.log("clearing styles");
-									getStyles()
-										.slice(0, -1)
-										.forEach((style) => {
-											console.log({ style, new_link });
-											if (style !== new_link) {
-												style.parentElement.removeChild(style);
-											}
-										});
-								};
-
-								document.querySelector("head").appendChild(new_link);
+							function cleanup_css() {
+								console.log("clearing styles");
+								getStyles()
+									.slice(0, -1)
+									.forEach((style) => {
+										style.parentElement.removeChild(style);
+									});
 							}
 							document.documentElement.addEventListener(
 								"turbo:morph",
-								refresh_css
+								cleanup_css
 							);
 							const socket = new WebSocket("ws://localhost:60808");
-							socket.onmessage = refresh_css;
+							socket.onmessage = () => {
+								const new_link = make_new_link();
+								new_link.onload = cleanup_css;
+								document.querySelector("head").appendChild(new_link);
+							};
 					  </script>`
 					: ""}
 			</body>
