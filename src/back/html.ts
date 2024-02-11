@@ -39,19 +39,44 @@ export default function html(
 				${(navbar || default_navbar)(ctx)} ${body}
 				${autoRefreshCSS
 					? /* HTML */ `<script>
-							function refresh_css() {
-								Array.from(document.querySelectorAll("link"))
-									.filter(
-										(e) =>
-											new URL(e.href).pathname == "/dist/main.css"
-									)
-									.forEach((e) => {
-										const url = new URL(e.href);
-										url.search =
-											"?" + Math.random() + "" + Math.random();
-										e.href = url.toString();
-									});
+							function make_new_link() {
+								const new_link = document.createElement("link");
+								new_link.rel = "stylesheet";
+								new_link.href = \`/dist/main.css?\${Math.random()}+\${Math.random()}\`;
+								new_link.type = "text/css";
+								return new_link;
 							}
+
+							function getStyles() {
+								return Array.from(
+									document.querySelectorAll("head link")
+								).filter(
+									(e) => new URL(e.href).pathname == "/dist/main.css"
+								);
+							}
+
+							function refresh_css() {
+								const new_link = make_new_link();
+
+								//only remove old css once the new one is loaded to prevent blink of unstyled content
+								new_link.onload = () => {
+									console.log("clearing styles");
+									getStyles()
+										.slice(0, -1)
+										.forEach((style) => {
+											console.log({ style, new_link });
+											if (style !== new_link) {
+												style.parentElement.removeChild(style);
+											}
+										});
+								};
+
+								document.querySelector("head").appendChild(new_link);
+							}
+							document.documentElement.addEventListener(
+								"turbo:morph",
+								refresh_css
+							);
 							const socket = new WebSocket("ws://localhost:60808");
 							socket.onmessage = refresh_css;
 					  </script>`
