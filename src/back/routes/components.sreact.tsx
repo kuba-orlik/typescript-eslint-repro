@@ -15,6 +15,8 @@ import objectPath from "object-path";
 
 export const actionName = "Components";
 
+const rerender = "this.closest('form').requestSubmit()";
+
 const actions = {
 	add_array_item: (
 		state: State,
@@ -147,7 +149,10 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 			<div>
 				<label>
 					{arg_path.at(-1)}
-					<select name={`$.args${this.printArgPath(arg_path)}`}>
+					<select
+						name={`$.args${this.printArgPath(arg_path)}`}
+						onchange={rerender}
+					>
 						{arg.values.map((v) => (
 							<option value={v} selected={value == v}>
 								{v}
@@ -191,7 +196,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 					{arg.getTypeName() == "markdown" ? (
 						<textarea
 							name={`$.args${this.printArgPath(arg_path)}`}
-							onblur="this.closest('form').requestSubmit()"
+							onblur={rerender}
 							cols="70"
 						>
 							{value as string}
@@ -218,10 +223,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 				<div class="resizable">
 					{/*The below button has to be here in order for it to be the default behavior */}
 					<input type="submit" value="Preview" />
-					<select
-						name="$.component"
-						onchange="this.closest('form').requestSubmit()"
-					>
+					<select name="$.component" onchange={rerender}>
 						{Object.entries(all_components).map(([name]) => (
 							<option value={name} selected={name == state.component}>
 								{name}
