@@ -6,6 +6,7 @@ import {
 	Fields,
 	Controls,
 	FormReaction,
+	fieldsToShape,
 } from "@sealcode/sealgen";
 import { Users } from "../collections/collections.js";
 import html from "../html.js";
@@ -18,7 +19,7 @@ const fields = {
 	password: new Fields.SimpleFormField(true),
 };
 
-export const SignUpShape = Fields.fieldsToShape(fields);
+export const SignUpShape = fieldsToShape(fields);
 
 export default new (class SignUpForm extends Form<typeof fields, void> {
 	defaultSuccessMessage = "Formularz wypełniony poprawnie";

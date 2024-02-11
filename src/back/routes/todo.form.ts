@@ -1,6 +1,13 @@
 import { tempstream } from "tempstream";
 import { Context } from "koa";
-import { Form, FormData, FormDataValue, Fields, Controls } from "@sealcode/sealgen";
+import {
+	Form,
+	FormData,
+	FormDataValue,
+	Fields,
+	Controls,
+	fieldsToShape,
+} from "@sealcode/sealgen";
 import { Tasks } from "../collections/collections.js";
 import html from "../html.js";
 import { TaskList } from "./common/tasks-view.js";
@@ -11,7 +18,7 @@ const fields = {
 	name: new Fields.CollectionField(true, Tasks.fields.title),
 };
 
-export const TodoShape = Fields.fieldsToShape(fields);
+export const TodoShape = fieldsToShape(fields);
 
 export default new (class TodoForm extends Form<typeof fields, void> {
 	defaultSuccessMessage = "Task has been successfully created";

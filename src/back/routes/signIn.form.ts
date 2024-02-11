@@ -1,16 +1,14 @@
 import { Context } from "koa";
-import {
-	Form,
-	FormData,
-	FormDataValue,
-	Fields,
-	Controls,
-	FormReaction,
-} from "@sealcode/sealgen";
+import { Form, Fields, Controls, fieldsToShape } from "@sealcode/sealgen";
 import { FlatTemplatable, tempstream } from "tempstream";
 import { Users } from "../collections/collections.js";
-import type { PageErrorMessage } from "@sealcode/sealgen/@types/page/mountable-with-fields.js";
 import html from "../html.js";
+import type {
+	FormDataValue,
+	FormData,
+	FormReaction,
+} from "@sealcode/sealgen/@types/src/forms/form-types.js";
+import type { PageErrorMessage } from "@sealcode/sealgen/@types/src/page/mountable-with-fields.js";
 
 export const actionName = "SignIn";
 
@@ -19,7 +17,7 @@ const fields = {
 	password: new Fields.SimpleFormField(true),
 };
 
-export const SignInShape = Fields.fieldsToShape(fields);
+export const SignInShape = fieldsToShape(fields);
 
 export default new (class SignInForm extends Form<typeof fields, void> {
 	defaultSuccessMessage = "Formularz wypełniony poprawnie";
