@@ -15,8 +15,6 @@ import objectPath from "object-path";
 
 export const actionName = "Components";
 
-const rerender = "this.closest('form').requestSubmit()";
-
 const actions = {
 	add_array_item: (
 		state: State,
@@ -49,6 +47,15 @@ const actions = {
 			args,
 		};
 	},
+	change_component: (state: State, inputs: Record<string, string>) => {
+		const component_name = inputs.component;
+		const component = registry.get(component_name);
+		return {
+			...state,
+			component: component_name,
+			args: component?.getExampleValues() || {},
+		};
+	},
 } as const;
 
 type State = {
@@ -60,7 +67,8 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 	actions = actions;
 
 	getInitialState() {
-		return { component: "", args: {} };
+		const [component_name, component] = Object.entries(registry.getAll())[0];
+		return { component: component_name, args: component.getExampleValues() };
 	}
 
 	wrapInLayout(ctx: BaseContext, content: Templatable): Templatable {
@@ -151,7 +159,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 					{arg_path.at(-1)}
 					<select
 						name={`$.args${this.printArgPath(arg_path)}`}
-						onchange={rerender}
+						onchange={this.rerender()}
 					>
 						{arg.values.map((v) => (
 							<option value={v} selected={value == v}>
@@ -196,7 +204,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 					{arg.getTypeName() == "markdown" ? (
 						<textarea
 							name={`$.args${this.printArgPath(arg_path)}`}
-							onblur={rerender}
+							onblur={this.rerender()}
 							cols="70"
 						>
 							{value as string}
@@ -223,7 +231,11 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 				<div class="resizable">
 					{/*The below button has to be here in order for it to be the default behavior */}
 					<input type="submit" value="Preview" />
-					<select name="$.component" onchange={rerender}>
+					<select
+						name="component"
+						onchange={this.makeActionCallback("change_component")}
+						autocomplete="off"
+					>
 						{Object.entries(all_components).map(([name]) => (
 							<option value={name} selected={name == state.component}>
 								{name}
