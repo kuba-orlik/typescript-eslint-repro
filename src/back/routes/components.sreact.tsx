@@ -56,6 +56,14 @@ const actions = {
 			args: component?.getExampleValues() || {},
 		};
 	},
+	randomize_args: (state: State, inputs: Record<string, string>) => {
+		const component_name = inputs.component;
+		const component = registry.get(component_name);
+		return {
+			...state,
+			args: component?.getExampleValues() || {},
+		};
+	},
 } as const;
 
 type State = {
@@ -242,7 +250,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 							</option>
 						))}
 					</select>
-
+					{this.makeActionButton(state, "randomize_args")}
 					<fieldset class="component-preview-parameters">
 						<legend>Parameters</legend>
 						{Object.entries(component.getArguments()).map(([arg_name, arg]) =>

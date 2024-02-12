@@ -34,6 +34,6 @@
 
 .component-preview {
 	* {
-		transition: all 200ms;
+		transition: all 150ms;
 	}
 }
