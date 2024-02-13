@@ -164,7 +164,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 		return (
 			<div>
 				<label>
-					{arg_path.at(-1)}
+					{arg_path.at(-1) || ""}
 					<select
 						name={`$.args${this.printArgPath(arg_path)}`}
 						onchange={this.rerender()}
@@ -208,7 +208,7 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 		return (
 			<div>
 				<label>
-					{arg_path.at(-1)}
+					{arg_path.at(-1) || ""}
 					{arg.getTypeName() == "markdown" ? (
 						<textarea
 							name={`$.args${this.printArgPath(arg_path)}`}
