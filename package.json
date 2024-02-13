@@ -16,7 +16,7 @@
 		"test-cmd-once": "vitest run --config ./src/back/vitest.config.ts",
 		"test": "npm run test-cmd -- --ui",
 		"coverage": "npm run test --coverage",
-		"postinstall": "sealgen make-env && npm install --prefix webhint",
+		"postinstall": "sealgen make-env && npm install --prefix webhint && npm run install-test-deps",
 		"test-reports": "rm -f .xunit && npm run test-cmd-once -- --coverage --reporter=junit --outputFile=.xunit",
 		"show-coverage": "npm run test-reports;  xdg-open coverage/index.html"
 	},
