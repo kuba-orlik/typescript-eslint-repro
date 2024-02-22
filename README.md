@@ -4,14 +4,13 @@
 
 -   docker
 -   docker-compose (version 2.6 or up)
+-   tmux
 
 ## Installation
 
 ```
 npm install
 ```
-
-Always use ./npm.sh when installing dependencies.
 
 ## Running the app in development mode
 
@@ -40,5 +39,5 @@ npx playwright install firefox
 And then
 
 ```
-./npm.sh run test
+npm run test
 ```

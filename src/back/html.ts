@@ -85,23 +85,67 @@ export default function html(
 									setTimeout(resolve, time);
 								});
 
-							let last_known_start_timestamp = 0;
+							const APP_DOWN_ERROR_MESSAGE = "App is currently down";
 
-							async function wait_for_app_restart() {
+							function get_status() {
+								return fetch("/status.json").then((r) => r.json());
+							}
+
+							async function wait_for_run_id_to_change() {
+								let first_timestamp;
+								try {
+									const { started_at, status } = await get_status();
+									first_timestamp = started_at;
+								} catch (e) {
+									await wait_for_app_to_be_stable();
+									return;
+								}
+
+								if (!first_timestamp) {
+									throw new Error(APP_DOWN_ERROR_MESSAGE);
+								}
+
 								while (true) {
-									const { started_at, status } = await fetch(
-										"/status.json"
-									)
-										.then((r) => r.json())
-										.catch(() => ({
-											started_at: last_known_start_timestamp,
+									const { started_at, status } =
+										await get_status().catch(() => ({
+											started_at: first_timestamp,
 										}));
-									if (started_at !== last_known_start_timestamp) {
-										last_known_start_timestamp = started_at;
+									if (started_at !== first_timestamp) {
 										return;
 									}
 									await sleep(100);
 								}
+							}
+
+							async function wait_for_app_to_be_stable(n = 3) {
+								console.log("Waiting for app to be stable....");
+								let counter = 0;
+								while (true) {
+									const { status } = await get_status().catch((e) => ({
+										status: "down",
+									}));
+									if (status == "running") {
+										console.log(counter);
+										counter++;
+									} else {
+										counter = 0;
+									}
+									if (counter == n) {
+										return;
+									}
+									await sleep(100);
+								}
+							}
+
+							async function wait_for_app_restart() {
+								try {
+									await wait_for_run_id_to_change();
+								} catch (e) {
+									if (e.message !== APP_DOWN_ERROR_MESSAGE) {
+										throw e;
+									}
+								}
+								await wait_for_app_to_be_stable();
 							}
 
 							(async function () {
