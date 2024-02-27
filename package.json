@@ -48,6 +48,7 @@
 		"sealious": "^0.17.48",
 		"stimulus": "^2.0.0",
 		"tempstream": "^0.3.12",
+		"unplugin-auto-import": "^0.17.5",
 		"vitest": "^1.1.0"
 	},
 	"devDependencies": {
