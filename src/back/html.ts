@@ -18,6 +18,7 @@ export const defaultHead = (
 		rel="stylesheet"
 		type="text/css"
 	/>
+	<link href="/dist/fonts/fonts.css" rel="stylesheet" type="text/css" />
 	${options.morphing ? `<meta name="turbo-refresh-method" content="morph" />` : ""}
 	${options.preserveScroll
 		? `<meta name="turbo-refresh-scroll" content="preserve">`
