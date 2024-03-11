@@ -29,6 +29,7 @@ export type HTMLOptions = {
 	morphing?: boolean;
 	navbar?: (ctx: BaseContext) => FlatTemplatable;
 	autoRefreshCSS?: boolean;
+	disableCopyEvent?: boolean;
 };
 
 export default function html(
@@ -187,6 +188,9 @@ export default function html(
 								};
 							})();
 					  </script>`
+					: ""}
+				${htmlOptions.disableCopyEvent
+					? /* HTML */ "<script>document.addEventListener('copy', (e) => e.preventDefault());</script>"
 					: ""}
 			</body>
 		</html>`;
