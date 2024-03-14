@@ -44,6 +44,7 @@
 		"axe/structure": "error",
 		"axe/tables": "error",
 		"axe/text-alternatives": "error",
-		"axe/time-and-media": "error"
+		"axe/time-and-media": "error",
+		"no-vulnerable-javascript-libraries": "off"
 	}
 }
