@@ -28,3 +28,6 @@ body {
 }
 
 
+nav a:not(:visited) {
+    color: var(--primary-accent-color);
+}
