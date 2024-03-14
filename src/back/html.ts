@@ -3,6 +3,7 @@ import { Readable } from "stream";
 import { BaseContext } from "koa";
 import { default as default_navbar } from "./routes/common/navbar.js";
 import { toKebabCase } from "js-convert-case";
+import { DEFAULT_HTML_LANG } from "./config.js";
 
 export const defaultHead = (
 	ctx: BaseContext,
@@ -30,6 +31,7 @@ export type HTMLOptions = {
 	navbar?: (ctx: BaseContext) => FlatTemplatable;
 	autoRefreshCSS?: boolean;
 	disableCopyEvent?: boolean;
+	language?: string;
 };
 
 export default function html(
@@ -45,7 +47,10 @@ export default function html(
 ): Readable {
 	ctx.set("content-type", "text/html;charset=utf-8");
 	return tempstream/* HTML */ ` <!DOCTYPE html>
-		<html lang="pl" class="title--${toKebabCase(title)}">
+		<html
+			lang="${htmlOptions.language || DEFAULT_HTML_LANG}"
+			class="title--${toKebabCase(title)}"
+		>
 			<head>
 				${makeHead(ctx, title, htmlOptions)}
 			</head>

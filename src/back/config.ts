@@ -15,3 +15,4 @@ export const MAILCATCHER_API_PORT = parseInt(
 	process.env.SEALIOUS_MAILCATCHER_API_PORT || "1082"
 );
 export const MAILER = process.env.SEALIOUS_MAILER;
+export const DEFAULT_HTML_LANG = "pl";
