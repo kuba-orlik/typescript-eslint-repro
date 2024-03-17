@@ -10,7 +10,7 @@ export const defaultHead = (
 	title: string,
 	options: HTMLOptions
 ) => /* HTML */ `<title>${title} · ${ctx.$app.manifest.name}</title>
-	<meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<script async src="/dist/bundle.js"></script>
 	<link
 		href="/dist/main.css${options.autoRefreshCSS
