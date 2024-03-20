@@ -30,3 +30,8 @@ public/dist
 .env
 .npm_cache/
 .mozilla/
+cache/*
+!cache/images/.keepme
+!cache/smartcrop/.keepme
+uploaded-images/*
+!uploaded-images/keepme
