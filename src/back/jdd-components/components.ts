@@ -6,5 +6,8 @@ export const registry = new Registry();
 import { ImageDemo } from "./image-demo/image-demo.jdd.js";
 registry.add("image-demo", ImageDemo);
 
+import { MapWithPins } from "./map-with-pins/map-with-pins.jdd.js";
+registry.add("map-with-pins", MapWithPins);
+
 import { NiceBox } from "./nice-box/nice-box.jdd.js";
 registry.add("nice-box", NiceBox);

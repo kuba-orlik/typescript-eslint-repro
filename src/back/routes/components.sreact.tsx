@@ -156,7 +156,7 @@ export default new (class ComponentsPage extends StatefulPage<
 
 	wrapInLayout(ctx: BaseContext, content: Templatable): Templatable {
 		return html(ctx, "Components", content, {
-			morphing: true,
+			morphing: false,
 			preserveScroll: true,
 			autoRefreshCSS: true,
 			navbar: () => ``,
