@@ -41,7 +41,7 @@
 		"@types/kill-port": "^2.0.0",
 		"get-port": "^7.0.0",
 		"js-convert-case": "^4.2.0",
-		"koa-responsive-image-router": "^0.2.18",
+		"koa-responsive-image-router": "^0.2.19",
 		"locreq": "^3.0.0",
 		"multiple-scripts-tmux": "^1.0.4",
 		"nodemon": "^3.0.1",
