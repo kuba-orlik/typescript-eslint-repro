@@ -29,17 +29,20 @@ export class ImageDemo extends Component<typeof component_arguments> {
 		return (
 			<div class="image-demo">
 				<h2>Image with alt text</h2>
-				{" " ||
-					render_image(image_with_alt.image, {
-						container: { width: 200, height: 200 },
-						alt: image_with_alt.alt,
-					})}
+				{render_image(image_with_alt.image, {
+					container: { width: 200, height: 200 },
+					alt: image_with_alt.alt,
+				})}
 
 				<h2>Multiple images</h2>
 				<div class="image-grid">
 					{multiple_images.map((image) =>
 						render_image(image, {
-							container: { width: 200, height: 200, objectFit: "cover" },
+							container: {
+								width: 200,
+								height: 200,
+								objectFit: "cover",
+							},
 						})
 					)}
 				</div>

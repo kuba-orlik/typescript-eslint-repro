@@ -1,3 +1,6 @@
+import _locreq from "locreq";
+import { module_dirname } from "./util.js";
+const locreq = _locreq(module_dirname(import.meta.url));
 export const SEALIOUS_SANITY = Boolean(process.env.SEALIOUS_SANITY);
 export const PORT = process.env.SEALIOUS_PORT
 	? parseInt(process.env.SEALIOUS_PORT)
@@ -16,3 +19,8 @@ export const MAILCATCHER_API_PORT = parseInt(
 );
 export const MAILER = process.env.SEALIOUS_MAILER;
 export const DEFAULT_HTML_LANG = "pl";
+
+export const IMAGE_CACHE_FS_DIR =
+	process.env.IMAGE_CACHE_FS_DIR || locreq.resolve("cache/images");
+export const SMARTCROP_CACHE_FS_DIR =
+	process.env.IMAGE_CACHE_FS_DIR || locreq.resolve("cache/smartcrop");

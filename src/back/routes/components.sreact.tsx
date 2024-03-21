@@ -1,82 +1,157 @@
-import { TempstreamJSX, Templatable, FlatTemplatable, tempstream } from "tempstream";
-import { BaseContext } from "koa";
-import { StatefulPage } from "@sealcode/sealgen";
-import html from "../html.js";
-import { registry } from "../jdd-components/components.js";
 import {
 	ComponentArgument,
-	Enum,
 	List,
 	render,
 	simpleJDDContext,
 	Structured,
 } from "@sealcode/jdd";
-import objectPath from "object-path";
+import { StateAndMetadata, StatefulPage, to_base64 } from "@sealcode/sealgen";
+import { hasFieldOfType, hasShape, is, predicates } from "@sealcode/ts-predicates";
+import { BaseContext } from "koa";
+import { Templatable, TempstreamJSX } from "tempstream";
+import html from "../html.js";
+import { registry } from "../jdd-components/components.js";
+import { ComponentInput } from "./component-preview/component-input.js";
+import { ComponentPreviewActions } from "./component-preview/component-preview-actions.js";
+import { jdd_context } from "./jdd-context.js";
 
 export const actionName = "Components";
 
-const actions = {
-	add_array_item: (
-		state: State,
-		_: Record<string, string>,
-		arg_path: string[],
-		empty_value: unknown
-	) => {
-		const args = state.args;
-		objectPath.insert(
-			args,
-			arg_path,
-			empty_value,
-			((objectPath.get(args, arg_path) as unknown[]) || []).length
-		);
-		return {
-			...state,
-			args,
-		};
-	},
-	remove_array_item: (
-		state: State,
-		_: Record<string, string>,
-		arg_path: string[],
-		index_to_remove: number
-	) => {
-		const args = state.args;
-		objectPath.del(args, [...arg_path, index_to_remove]);
-		return {
-			...state,
-			args,
-		};
-	},
-	change_component: (state: State, inputs: Record<string, string>) => {
-		const component_name = inputs.component;
-		const component = registry.get(component_name);
-		return {
-			...state,
-			component: component_name,
-			args: component?.getExampleValues() || {},
-		};
-	},
-	randomize_args: (state: State, inputs: Record<string, string>) => {
-		const component_name = inputs.component;
-		const component = registry.get(component_name);
-		return {
-			...state,
-			args: component?.getExampleValues() || {},
-		};
-	},
-} as const;
+function id<X>(_: any, __: any, x: X): X {
+	return x;
+}
 
-type State = {
+async function encodeSealiousFile(maybe_file: Record<string, unknown>) {
+	if (maybe_file?.getDataPath) {
+		return simpleJDDContext.encode_file(
+			{
+				type: "path",
+				// asserting that this is an instance of sealious' FileFromPath
+				path: (maybe_file as unknown as { data: { path: string } }).data
+					.path as string,
+			},
+			false
+		);
+	}
+}
+
+const componentArgToRequestProcessor = {
+	list: async function (arg, arg_name, value: unknown) {
+		if (
+			!is(value, predicates.array(predicates.object)) &&
+			!is(value, predicates.object)
+		) {
+			throw new Error(`$.${arg_name} is not a list or object`);
+		}
+		const values = Array.isArray(value) ? value : Object.values(value);
+		const nested_arg_type = (arg as List<ComponentArgument<unknown>>).item_type;
+		let array_result: Array<unknown> = await Promise.all(
+			values.map((value, index) => {
+				return (
+					componentArgToRequestProcessor[nested_arg_type.getTypeName()] || id
+				)(nested_arg_type, `${arg_name}[${index}]`, value);
+			})
+		);
+		if (nested_arg_type.getTypeName() != "list") {
+			array_result = array_result.flat();
+		}
+		return array_result;
+	},
+	structured: async function (arg, arg_name, value) {
+		if (!is(value, predicates.object)) {
+			throw new Error(`${arg_name} is not an object`);
+		}
+		let result = Object.fromEntries(
+			await Promise.all(
+				Object.entries(value).map(async ([obj_key, obj_value]) => {
+					const nested_arg_type: ComponentArgument<unknown> = (
+						arg as Structured<Record<string, ComponentArgument<unknown>>>
+					).structure[obj_key];
+					if (!nested_arg_type) {
+						return [obj_key, null];
+					}
+					const new_value = await (
+						componentArgToRequestProcessor[nested_arg_type.getTypeName()] ||
+						id
+					)(arg, `${arg_name}[${obj_key}]`, obj_value);
+					return [obj_key, new_value];
+				})
+			)
+		);
+
+		// if we're in a list and any of the values return an array, we will multiply the object
+		if (arg.hasParent("list")) {
+			const keys_with_unexpected_arrays = Object.entries(result)
+				.filter(([key, value]) => {
+					const nested_arg_type: ComponentArgument<unknown> = (
+						arg as Structured<Record<string, ComponentArgument<unknown>>>
+					).structure[key];
+					return (
+						nested_arg_type.getTypeName() !== "list" && Array.isArray(value)
+					);
+				})
+				.map(([key]) => key);
+
+			if (keys_with_unexpected_arrays.length > 1) {
+				throw new Error(
+					"Multiplying on multiple fields at the same time is not implemented yet"
+				);
+			}
+			if (keys_with_unexpected_arrays.length == 1) {
+				const key = keys_with_unexpected_arrays[0];
+				const old_result = result;
+				result = (old_result[key] as Array<unknown>).map((value) => ({
+					...old_result,
+					[key]: value,
+				}));
+			}
+		}
+		return result;
+	},
+	image: async function (arg, _, value: unknown) {
+		if (
+			!hasShape(
+				{
+					new: predicates.maybe(predicates.array(predicates.object)),
+					old: predicates.string,
+				},
+				value
+			)
+		) {
+			return null;
+		}
+		const files = (value.new || []).filter((e) => e);
+		if (files.length == 0) {
+			return value.old;
+		} else if (files.length == 1) {
+			return encodeSealiousFile(files[0]);
+		} else if (arg.hasParent("list")) {
+			return Promise.all(files.map(encodeSealiousFile));
+		}
+	},
+} as Record<
+	string,
+	(arg: ComponentArgument<any>, arg_name: string, value: unknown) => Promise<unknown>
+>;
+
+export type ComponentPreviewState = {
 	component: string;
-	args: Record<string, unknown>;
+	component_args: Record<string, unknown>;
 };
 
-export default new (class ComponentsPage extends StatefulPage<State, typeof actions> {
-	actions = actions;
+export default new (class ComponentsPage extends StatefulPage<
+	ComponentPreviewState,
+	typeof ComponentPreviewActions
+> {
+	actions = ComponentPreviewActions;
 
-	getInitialState() {
+	async getInitialState() {
 		const [component_name, component] = Object.entries(registry.getAll())[0];
-		return { component: component_name, args: component.getExampleValues() };
+		const initial_state = {
+			component: component_name,
+			component_args: await component.getExampleValues(jdd_context),
+		};
+		return initial_state;
 	}
 
 	wrapInLayout(ctx: BaseContext, content: Templatable): Templatable {
@@ -88,149 +163,68 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 		});
 	}
 
-	renderListArgument<T>(
-		state: State,
-		arg_path: string[],
-		arg: List<ComponentArgument<T>>,
-		value: T[] = []
-	): FlatTemplatable {
+	wrapInForm(state: ComponentPreviewState, content: Templatable): Templatable {
+		// overwriting this method in order to add enctype to form
 		return (
-			<fieldset>
-				<legend>{arg_path.at(-1)}</legend>
-				{value.map((e, i) => (
-					<div style="display: flex">
-						{this.renderArgumentInput(
-							state,
-							[...arg_path, i.toString()],
-							arg.item_type,
-							e
-						)}
-						{this.makeActionButton(
-							state,
-							{ action: "remove_array_item", label: "❌" },
-							arg_path,
-							i
-						)}
-					</div>
-				))}
-				{this.makeActionButton(
-					state,
-					{
-						action: "add_array_item",
-						label: "➕",
-					},
-					arg_path,
-					arg.item_type.getExampleValue()
-				)}
-			</fieldset>
+			<form action="./" method="POST" enctype="multipart/form-data">
+				<input
+					name="state"
+					type="hidden"
+					value={to_base64(JSON.stringify(state))}
+				/>
+				{content}
+			</form>
 		);
 	}
 
-	renderStructuredArgument<
-		T extends Structured<Record<string, ComponentArgument<unknown>>>
-	>(
-		state: State,
-		arg_path: string[],
-		arg: T,
-		value: Record<string, unknown>
-	): FlatTemplatable {
-		return (
-			<fieldset>
-				<legend>{arg_path.at(-1)}</legend>
-				{Object.entries(arg.structure).map(([arg_name, arg]) => (
-					<div>
-						{this.renderArgumentInput(
-							state,
-							[...arg_path, arg_name],
-							arg,
-							(value as Record<string, unknown>)[arg_name]
-						)}
-					</div>
-				))}
-			</fieldset>
-		);
+	async preprocessRequestBody<
+		T extends StateAndMetadata<ComponentPreviewState, typeof ComponentPreviewActions>
+	>(values: Record<string, unknown>): Promise<T> {
+		let old_component = hasFieldOfType(values, "component", predicates.string)
+			? values.component
+			: null;
+
+		const new_component = hasShape(
+			{ $: predicates.shape({ component: predicates.string }) },
+			values
+		)
+			? values.$.component
+			: null;
+
+		const component_name = new_component || old_component;
+		if (!component_name) {
+			throw new Error("Unspecified component name");
+		}
+		const component = registry.get(component_name);
+		if (!component) {
+			throw new Error(`Unknown component: ${component_name}`);
+		}
+		if (
+			!hasShape(
+				{ $: predicates.shape({ component_args: predicates.object }) },
+				values
+			)
+		) {
+			// no component args to overwrite
+			return values as T;
+		}
+		for (const [arg_name, arg] of Object.entries(component.getArguments())) {
+			let value = values.$.component_args[arg_name];
+			if (value) {
+				const new_value = await (
+					componentArgToRequestProcessor[arg.getTypeName()] || id
+				)(arg, arg_name, value);
+				values.$.component_args[arg_name] = new_value;
+			}
+		}
+		return values as T;
 	}
 
-	printArgPath(path: string[]): string {
-		return path.map((e) => `[${e}]`).join("");
-	}
-
-	renderEnumArgument<T extends Enum<any>>(
-		state: State,
-		arg_path: string[],
-		arg: T,
-		value: string
-	): FlatTemplatable {
-		return (
-			<div>
-				<label>
-					{arg_path.at(-1) || ""}
-					<select
-						name={`$.args${this.printArgPath(arg_path)}`}
-						onchange={this.rerender()}
-					>
-						{arg.values.map((v) => (
-							<option value={v} selected={value == v}>
-								{v}
-							</option>
-						))}
-					</select>
-				</label>
-			</div>
-		);
-	}
-
-	renderArgumentInput<T>(
-		state: State,
-		arg_path: string[],
-		arg: ComponentArgument<T>,
-		value: T
-	): FlatTemplatable {
-		if (value === undefined) {
-			value = arg.getEmptyValue();
-		}
-		if (arg instanceof List) {
-			return this.renderListArgument(state, arg_path, arg, value as T[]);
-		}
-
-		if (arg instanceof Structured) {
-			return this.renderStructuredArgument(
-				state,
-				arg_path,
-				arg,
-				value as Record<string, unknown>
-			);
-		}
-
-		if (arg instanceof Enum) {
-			return this.renderEnumArgument(state, arg_path, arg, value as string);
-		}
-		return (
-			<div>
-				<label>
-					{arg_path.at(-1) || ""}
-					{arg.getTypeName() == "markdown" ? (
-						<textarea
-							name={`$.args${this.printArgPath(arg_path)}`}
-							onblur={this.rerender()}
-							cols="70"
-						>
-							{value as string}
-						</textarea>
-					) : (
-						<input
-							type="text"
-							name={`$.args${this.printArgPath(arg_path)}`}
-							value={value as string}
-							size="70"
-						/>
-					)}
-				</label>
-			</div>
-		);
-	}
-
-	render(ctx: BaseContext, state: State, inputs: Record<string, string>) {
+	render(
+		ctx: BaseContext,
+		state: ComponentPreviewState,
+		inputs: Record<string, string>
+	) {
 		const all_components = registry.getAll();
 		const component =
 			registry.get(state.component) || Object.values(all_components)[0];
@@ -253,19 +247,26 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 					{this.makeActionButton(state, "randomize_args")}
 					<fieldset class="component-preview-parameters">
 						<legend>Parameters</legend>
-						{Object.entries(component.getArguments()).map(([arg_name, arg]) =>
-							this.renderArgumentInput(
-								state,
-								[arg_name],
-								arg,
-								state.args[arg_name] === undefined
-									? arg.getExampleValue()
-									: state.args[arg_name]
+						{Object.entries(component.getArguments()).map(
+							async ([arg_name, arg]) => (
+								<ComponentInput
+									{...{
+										state,
+										arg_path: [arg_name],
+										arg,
+										value:
+											state.component_args[arg_name] === undefined
+												? await arg.getExampleValue(jdd_context)
+												: state.component_args[arg_name],
+										onblur: this.rerender(),
+										page: this,
+									}}
+								/>
 							)
 						)}
 						<input type="submit" value="Preview" />
 					</fieldset>
-					<div>{JSON.stringify(state)}</div>
+					<code>{JSON.stringify(state)}</code>
 				</div>
 				<div class="resize-gutter"></div>
 				{
@@ -307,18 +308,30 @@ export default new (class ComponentsPage extends StatefulPage<State, typeof acti
 						<legend>Preview</legend>
 						{render(
 							registry,
-							[{ component_name: state.component, args: state.args }],
-							simpleJDDContext
+							[
+								{
+									component_name: state.component,
+									args: state.component_args,
+								},
+							],
+							jdd_context
 						)}
 					</fieldset>
 				</div>
 				{
 					/* HTML */ `<script>
+						const main_form = document
+							.querySelector("#component-debugger")
+							.closest("form");
 						document.documentElement.addEventListener("ts-rebuilt", () => {
-							document
-								.querySelector("#component-debugger")
-								.closest("form")
-								.requestSubmit();
+							main_form.requestSubmit();
+						});
+						main_form.addEventListener("turbo:submit-end", () => {
+							// this clears the values of file inputs, so they don't get unecessarily
+							// re-uploaded on future submissions - the file is alreade there on the server
+							main_form
+								.querySelectorAll("input[type=file]")
+								.forEach((input) => (input.value = ""));
 						});
 					</script>`
 				}

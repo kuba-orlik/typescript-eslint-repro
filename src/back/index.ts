@@ -1,5 +1,7 @@
 import kill from "kill-port";
+import type { KoaResponsiveImageRouter } from "koa-responsive-image-router";
 import _locreq from "locreq";
+import { FlatTemplatable } from "tempstream";
 import TheApp from "./app.js";
 import { PORT, SEALIOUS_SANITY } from "./config.js";
 import { mainRouter } from "./routes/index.js";
