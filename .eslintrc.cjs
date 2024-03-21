@@ -16,16 +16,17 @@ module.exports = {
 		project: [
 			"./src/back/tsconfig.json",
 			"./src/front/tsconfig.json",
-			"./src/scripts/tsconfig.json",
 		],
 	},
 	rules: {
+		"@typescript-eslint/no-unused-vars": [2, { "varsIgnorePattern": "TempstreamJSX" }],
 		"@typescript-eslint/require-await": 0,
 		/* "jsdoc/require-description": 2, */
 		"no-await-in-loop": 2,
 		"@typescript-eslint/consistent-type-assertions": [1, { assertionStyle: "never" }],
-		"no-console": 1,
+		"no-console": [1, { "allow": ["error"] }]
 	},
+	"ignorePatterns": ["dist/*", "public/dist/*", "coverage/*", "webhint/*"],
 	settings: { jsdoc: { mode: "typescript" } },
 	overrides: [
 		{

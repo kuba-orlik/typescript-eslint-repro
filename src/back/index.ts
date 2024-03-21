@@ -10,7 +10,7 @@ const locreq = _locreq(module_dirname(import.meta.url));
 
 const app = new TheApp();
 
-(async function () {
+void (async function () {
 	await kill(PORT);
 	await kill(PORT);
 

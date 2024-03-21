@@ -1,7 +1,7 @@
 import { simpleJDDContext, JDDContext } from "@sealcode/jdd";
 import { imageRouter } from "../image-router.js";
 
-export const jdd_context = {
+export const jdd_context: JDDContext = {
 	...simpleJDDContext,
 	render_image: async (image_id, args) => {
 		if (!image_id) {
@@ -13,4 +13,4 @@ export const jdd_context = {
 		}
 		return imageRouter.image(image_pointer.path, args);
 	},
-} as JDDContext;
+};

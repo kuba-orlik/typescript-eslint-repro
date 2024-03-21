@@ -4,10 +4,8 @@ import { TempstreamJSX } from "tempstream";
 import { ComponentPreviewState } from "../components.sreact.js";
 import { ComponentInput } from "./component-input.js";
 import { ComponentPreviewActions } from "./component-preview-actions.js";
-import { printArgPath } from "./print-arg-path.js";
 
 export function ComponentInputStructured<
-	State,
 	T extends Structured<Record<string, ComponentArgument<unknown>>>
 >({
 	state,

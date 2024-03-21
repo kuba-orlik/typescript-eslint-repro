@@ -22,7 +22,7 @@ describe("user-roles", () => {
 							session
 						);
 					},
-					(e: any) => {
+					(e) => {
 						assert.equal(
 							e?.response.data.data.field_messages.role?.message,
 							"Missing value for field 'role'."

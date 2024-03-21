@@ -11,14 +11,14 @@ export async function webhintURL(url: string, config = locreq.resolve(".hintrc")
 	// eslint-disable-next-line no-console
 	console.log("scanning with webhint....", url);
 	try {
-		console.log("cwd", locreq.resolve("webhint"));
 		const subprocess = spawn(
 			"node",
 			[locreq.resolve("webhint/node_modules/.bin/hint"), "--config", config, url],
 			{ cwd: locreq.resolve("webhint") } // to prevent webhint from trying to parese source code
 		);
-		subprocess.stderr.on("data", (b) => console.error(b.toString()));
-		subprocess.stdout.on("data", (b) => console.log(b.toString()));
+		subprocess.stderr.on("data", (b) => console.error(String(b)));
+		// eslint-disable-next-line no-console
+		subprocess.stdout.on("data", (b) => console.log(String(b)));
 		await new Promise<void>((resolve, reject) => {
 			subprocess.on("close", (code) =>
 				code === 0 ? resolve() : reject(new Error("Webhint tests failed"))

@@ -1,6 +1,5 @@
-import { Browser, BrowserContext, Page } from "@playwright/test";
 import ADMIN_CREDENTIALS from "../default-admin-credentials.js";
-import { getBrowser, getPage } from "../test_utils/browser-creator.js";
+import { getPage } from "../test_utils/browser-creator.js";
 import { VERY_LONG_TEST_TIMEOUT, webhintURL } from "../test_utils/webhint.js";
 import { withProdApp } from "../test_utils/with-prod-app.js";
 import { LogoutURL, SignInURL } from "./urls.js";

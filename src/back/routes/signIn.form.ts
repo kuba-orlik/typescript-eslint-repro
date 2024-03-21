@@ -55,16 +55,18 @@ export default new (class SignInForm extends Form<typeof fields, void> {
 		}
 		return { canAccess: true, message: "" };
 	}
-
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	async onSuccess(
 		_: Context,
 		__: FormData<string>,
 		_submitResult: void
+		/* eslint-enable @typescript-eslint/no-unused-vars */
 	): Promise<FormReaction> {
 		const reaction: FormReaction = {
 			action: "redirect",
 			url: "/",
 		};
+		// eslint-disable-next-line no-console
 		console.log("Successfully logged in.");
 		return reaction;
 	}
@@ -90,8 +92,8 @@ export default new (class SignInForm extends Form<typeof fields, void> {
 	async onSubmit(ctx: Context, data: FormData) {
 		try {
 			const sessionId: string = await Users.app.collections.sessions.login(
-				data.raw_values.username as string,
-				data.raw_values.password as string
+				String(data.raw_values.username),
+				String(data.raw_values.password)
 			);
 
 			ctx.cookies.set("sealious-session", sessionId, {

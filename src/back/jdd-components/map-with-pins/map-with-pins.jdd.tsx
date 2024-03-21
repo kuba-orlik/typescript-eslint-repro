@@ -3,7 +3,6 @@ import {
 	Component,
 	ComponentArguments,
 	ExtractStructuredComponentArgumentsValues,
-	JDDContext,
 } from "@sealcode/jdd";
 
 const coordinates = new ComponentArguments.ShortText();
@@ -33,10 +32,11 @@ export class MapWithPins extends Component<typeof component_arguments> {
 		return component_arguments;
 	}
 
-	toHTML(
-		{ pins }: ExtractStructuredComponentArgumentsValues<typeof component_arguments>,
-		{ render_markdown }: JDDContext
-	): FlatTemplatable {
+	toHTML({
+		pins,
+	}: ExtractStructuredComponentArgumentsValues<
+		typeof component_arguments
+	>): FlatTemplatable {
 		return (
 			<div class="map-with-pins">
 				<link

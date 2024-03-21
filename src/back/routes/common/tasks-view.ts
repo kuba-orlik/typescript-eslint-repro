@@ -4,6 +4,8 @@ import frame from "../../frame.js";
 import { Tasks } from "../../collections/collections.js";
 
 export function Task(task: CollectionItem<typeof Tasks>) {
+	const title = task.get("title");
+	const title_string = title ? title : "";
 	return frame(
 		`task-${task.id}`,
 		/* HTML */ `<li class="task">
@@ -14,7 +16,7 @@ export function Task(task: CollectionItem<typeof Tasks>) {
 				data-id="${task.id}"
 				${task.get("done") ? "checked" : ""}
 			/>
-			${task.get("title") as string}
+			${title_string}
 			<form method="POST" action="/todo/">
 				<input class="delete-button" type="submit" value="Delete" />
 				<input
@@ -46,8 +48,8 @@ export async function TaskList(ctx: BaseContext) {
 
 	const tasksTemplate = tasks.map(Task).join("\n");
 	return `
-                <ul>
-                    ${tasksTemplate}
-                </ul>
-            `;
+				<ul>
+					${tasksTemplate}
+				</ul>
+			`;
 }

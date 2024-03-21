@@ -1,4 +1,4 @@
-import { FlatTemplatable, TempstreamJSX } from "tempstream";
+import { TempstreamJSX } from "tempstream";
 import {
 	Component,
 	ComponentArguments,
@@ -29,7 +29,7 @@ export class NiceBox extends Component<typeof component_arguments> {
 			content,
 			images,
 		}: ExtractStructuredComponentArgumentsValues<typeof component_arguments>,
-		{ render_markdown, decode_file, render_image }: JDDContext
+		{ render_markdown, render_image }: JDDContext
 	): Promise<Readable> {
 		return (
 			<div class="nice-box">

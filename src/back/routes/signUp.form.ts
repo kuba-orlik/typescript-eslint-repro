@@ -74,13 +74,12 @@ export default new (class SignUpForm extends Form<typeof fields, void> {
 			messages: [
 				{
 					type: "error",
-					text: `An unexpected error occurred, try again. <br> Error${
-						error as string
-					}`,
+					text: `An unexpected error occurred, try again. <br> Error: ${String(
+						error
+					)}`,
 				},
 			],
 		};
-
 		return reaction;
 	}
 
@@ -126,6 +125,7 @@ export default new (class SignUpForm extends Form<typeof fields, void> {
 				email: email,
 				roles: [],
 			});
+			// eslint-disable-next-line no-console
 			console.log("A user was created successfully.");
 		} catch (error) {
 			console.error("Error during user creation:", error);

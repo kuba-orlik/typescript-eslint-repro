@@ -17,26 +17,46 @@ import { jdd_context } from "./jdd-context.js";
 
 export const actionName = "Components";
 
-function id<X>(_: any, __: any, x: X): X {
+function id<X>(_: unknown, __: unknown, x: X): X {
 	return x;
 }
 
+function isSealiousFile(x: unknown): x is { data: { path: string } } {
+	return hasShape(
+		{
+			getDataPath: predicates.any,
+			data: predicates.shape({ path: predicates.string }),
+		},
+		x
+	);
+}
+
 async function encodeSealiousFile(maybe_file: Record<string, unknown>) {
-	if (maybe_file?.getDataPath) {
+	if (isSealiousFile(maybe_file)) {
 		return simpleJDDContext.encode_file(
 			{
 				type: "path",
 				// asserting that this is an instance of sealious' FileFromPath
-				path: (maybe_file as unknown as { data: { path: string } }).data
-					.path as string,
+				path: maybe_file.data.path,
 			},
 			false
 		);
 	}
 }
 
-const componentArgToRequestProcessor = {
-	list: async function (arg, arg_name, value: unknown) {
+const componentArgToRequestProcessor: Record<
+	string,
+	(
+		arg: ComponentArgument<unknown>,
+		arg_name: string,
+		value: unknown
+	) => Promise<unknown>
+> = {
+	list: async function (
+		arg: List<ComponentArgument<unknown>>,
+		arg_name,
+		value: unknown
+	) {
 		if (
 			!is(value, predicates.array(predicates.object)) &&
 			!is(value, predicates.object)
@@ -44,12 +64,13 @@ const componentArgToRequestProcessor = {
 			throw new Error(`$.${arg_name} is not a list or object`);
 		}
 		const values = Array.isArray(value) ? value : Object.values(value);
-		const nested_arg_type = (arg as List<ComponentArgument<unknown>>).item_type;
+		const nested_arg_type = arg.item_type;
 		let array_result: Array<unknown> = await Promise.all(
-			values.map((value, index) => {
-				return (
+			values.map(async (value, index) => {
+				const result = await (
 					componentArgToRequestProcessor[nested_arg_type.getTypeName()] || id
 				)(nested_arg_type, `${arg_name}[${index}]`, value);
+				return result;
 			})
 		);
 		if (nested_arg_type.getTypeName() != "list") {
@@ -57,35 +78,35 @@ const componentArgToRequestProcessor = {
 		}
 		return array_result;
 	},
-	structured: async function (arg, arg_name, value) {
+	structured: async function (
+		arg: Structured<Record<string, ComponentArgument<unknown>>>,
+		arg_name,
+		value
+	) {
 		if (!is(value, predicates.object)) {
 			throw new Error(`${arg_name} is not an object`);
 		}
-		let result = Object.fromEntries(
-			await Promise.all(
-				Object.entries(value).map(async ([obj_key, obj_value]) => {
-					const nested_arg_type: ComponentArgument<unknown> = (
-						arg as Structured<Record<string, ComponentArgument<unknown>>>
-					).structure[obj_key];
-					if (!nested_arg_type) {
-						return [obj_key, null];
-					}
-					const new_value = await (
-						componentArgToRequestProcessor[nested_arg_type.getTypeName()] ||
-						id
-					)(arg, `${arg_name}[${obj_key}]`, obj_value);
-					return [obj_key, new_value];
-				})
-			)
+		const result: Record<string, unknown> = {};
+		await Promise.all(
+			Object.entries(value).map(async ([obj_key, obj_value]) => {
+				const nested_arg_type: ComponentArgument<unknown> =
+					arg.structure[obj_key];
+				if (!nested_arg_type) {
+					return [obj_key, null];
+				}
+				const new_value = await (
+					componentArgToRequestProcessor[nested_arg_type.getTypeName()] || id
+				)(arg, `${arg_name}[${obj_key}]`, obj_value);
+				result[obj_key] = new_value;
+			})
 		);
 
 		// if we're in a list and any of the values return an array, we will multiply the object
 		if (arg.hasParent("list")) {
 			const keys_with_unexpected_arrays = Object.entries(result)
 				.filter(([key, value]) => {
-					const nested_arg_type: ComponentArgument<unknown> = (
-						arg as Structured<Record<string, ComponentArgument<unknown>>>
-					).structure[key];
+					const nested_arg_type: ComponentArgument<unknown> =
+						arg.structure[key];
 					return (
 						nested_arg_type.getTypeName() !== "list" && Array.isArray(value)
 					);
@@ -100,13 +121,21 @@ const componentArgToRequestProcessor = {
 			if (keys_with_unexpected_arrays.length == 1) {
 				const key = keys_with_unexpected_arrays[0];
 				const old_result = result;
-				result = (old_result[key] as Array<unknown>).map((value) => ({
+				const array = old_result[key];
+				if (!Array.isArray(array)) {
+					throw new Error("expected an array");
+				}
+
+				return array.map((value: unknown) => ({
 					...old_result,
 					[key]: value,
 				}));
+			} else {
+				return result;
 			}
+		} else {
+			return result;
 		}
-		return result;
 	},
 	image: async function (arg, _, value: unknown) {
 		if (
@@ -129,10 +158,7 @@ const componentArgToRequestProcessor = {
 			return Promise.all(files.map(encodeSealiousFile));
 		}
 	},
-} as Record<
-	string,
-	(arg: ComponentArgument<any>, arg_name: string, value: unknown) => Promise<unknown>
->;
+};
 
 export type ComponentPreviewState = {
 	component: string;
@@ -180,7 +206,7 @@ export default new (class ComponentsPage extends StatefulPage<
 	async preprocessRequestBody<
 		T extends StateAndMetadata<ComponentPreviewState, typeof ComponentPreviewActions>
 	>(values: Record<string, unknown>): Promise<T> {
-		let old_component = hasFieldOfType(values, "component", predicates.string)
+		const old_component = hasFieldOfType(values, "component", predicates.string)
 			? values.component
 			: null;
 
@@ -206,25 +232,26 @@ export default new (class ComponentsPage extends StatefulPage<
 			)
 		) {
 			// no component args to overwrite
+			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 			return values as T;
 		}
-		for (const [arg_name, arg] of Object.entries(component.getArguments())) {
-			let value = values.$.component_args[arg_name];
-			if (value) {
-				const new_value = await (
-					componentArgToRequestProcessor[arg.getTypeName()] || id
-				)(arg, arg_name, value);
-				values.$.component_args[arg_name] = new_value;
+		const promises = Object.entries(component.getArguments()).map(
+			async ([arg_name, arg]) => {
+				const value = values.$.component_args[arg_name];
+				if (value) {
+					const new_value = await (
+						componentArgToRequestProcessor[arg.getTypeName()] || id
+					)(arg, arg_name, value);
+					values.$.component_args[arg_name] = new_value;
+				}
 			}
-		}
+		);
+		await Promise.all(promises);
+		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 		return values as T;
 	}
 
-	render(
-		ctx: BaseContext,
-		state: ComponentPreviewState,
-		inputs: Record<string, string>
-	) {
+	render(_ctx: BaseContext, state: ComponentPreviewState) {
 		const all_components = registry.getAll();
 		const component =
 			registry.get(state.component) || Object.values(all_components)[0];

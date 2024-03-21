@@ -81,20 +81,17 @@ export default new (class TodoForm extends Form<typeof fields, void> {
 				} catch (error) {
 					throw new Error();
 				}
-				console.debug(`task has been successfully created`);
 				break;
 			}
 			case "delete": {
 				const task = await ctx.$app.collections.tasks.getByID(
 					ctx.$context,
-					data.raw_values.taskId as string
+					String(data.raw_values.taskId)
 				);
 				await task.remove(ctx.$context);
-				console.debug(`task has been successfully removed`);
 				break;
 			}
 			default: {
-				console.debug("Wrong action");
 				break;
 			}
 		}

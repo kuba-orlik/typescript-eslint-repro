@@ -11,7 +11,7 @@ export default class TaskController extends Controller {
 	}
 
 	async toggle(event: Event) {
-		const inputElement: HTMLInputElement = event.target as HTMLInputElement;
+		const inputElement = event.target;
 
 		if (inputElement instanceof HTMLInputElement) {
 			const isChecked: boolean = inputElement.checked;

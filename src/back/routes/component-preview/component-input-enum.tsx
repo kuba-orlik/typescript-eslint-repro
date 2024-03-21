@@ -2,8 +2,7 @@ import { Enum } from "@sealcode/jdd";
 import { TempstreamJSX } from "tempstream";
 import { printArgPath } from "./print-arg-path.js";
 
-export function ComponentInputEnum<State, T extends Enum<any>>({
-	state,
+export function ComponentInputEnum<State, S extends string, T extends Enum<S>>({
 	arg_path,
 	arg,
 	value,
@@ -23,7 +22,7 @@ export function ComponentInputEnum<State, T extends Enum<any>>({
 					name={`$.component_args${printArgPath(arg_path)}`}
 					onchange={onchange}
 				>
-					{arg.values.map((v) => (
+					{arg.values.map((v: S) => (
 						<option value={v} selected={value == v}>
 							{v}
 						</option>

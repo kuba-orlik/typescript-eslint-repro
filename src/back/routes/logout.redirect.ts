@@ -13,7 +13,7 @@ export default new (class LogoutRedirect extends Mountable {
 	mount(router: Router, path: string) {
 		router.get(path, async (ctx) => {
 			try {
-				const session_id: string = ctx.cookies.get("sealious-session") as string;
+				const session_id = ctx.cookies.get("sealious-session");
 				if (session_id) {
 					await ctx.$app.collections.sessions.logout(
 						new ctx.$app.SuperContext(),

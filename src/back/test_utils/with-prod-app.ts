@@ -27,8 +27,11 @@ export async function withProdApp(
 	}) => Promise<void>
 ) {
 	const app = new TheApp();
-	const port = (await port_numbers().next()).value as number;
-
+	const port = (await port_numbers().next()).value;
+	if (!port) {
+		console.error("Constant port is empty.");
+		return;
+	}
 	app.config["www-server"].port = port;
 	app.config.datastore_mongo = {
 		...app.config.datastore_mongo,
