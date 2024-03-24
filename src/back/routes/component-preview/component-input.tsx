@@ -1,4 +1,4 @@
-import { Enum, Image, List, Structured } from "@sealcode/jdd";
+import { Enum, Image, List, Structured, Table, TableData } from "@sealcode/jdd";
 import { ComponentArgument } from "@sealcode/jdd";
 import { StatefulPage } from "@sealcode/sealgen";
 import { TempstreamJSX } from "tempstream";
@@ -7,6 +7,7 @@ import { ComponentInputEnum } from "./component-input-enum.js";
 import { ComponentInputImage } from "./component-input-image.js";
 import { ComponentInputList } from "./component-input-list.js";
 import { ComponentInputStructured } from "./component-input-structured.js";
+import { ComponentInputTable } from "./component-input-table.js";
 import { printArgPath } from "./print-arg-path.js";
 
 export function ComponentInput<State extends ComponentPreviewState, T>({
@@ -59,6 +60,16 @@ export function ComponentInput<State extends ComponentPreviewState, T>({
 		});
 	}
 
+	if (arg instanceof Table) {
+		return ComponentInputTable({
+			state,
+			arg_path,
+			arg,
+			value: value as TableData<unknown, unknown>,
+			page,
+		});
+	}
+
 	return (
 		<div>
 			<label>
@@ -67,7 +78,7 @@ export function ComponentInput<State extends ComponentPreviewState, T>({
 					<textarea
 						name={`$.component_args${printArgPath(arg_path)}`}
 						onblur={page.rerender()}
-						cols="70"
+						cols="40"
 					>
 						{value as string}
 					</textarea>
@@ -76,7 +87,7 @@ export function ComponentInput<State extends ComponentPreviewState, T>({
 						type="text"
 						name={`$.component_args${printArgPath(arg_path)}`}
 						value={value as string}
-						size="70"
+						size="40"
 					/>
 				)}
 			</label>

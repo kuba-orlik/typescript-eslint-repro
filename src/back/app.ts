@@ -1,5 +1,5 @@
 import _locreq from "locreq";
-import Sealious, { App, LoggerMailer, SMTPMailer } from "sealious";
+import { App, LoggerMailer, SMTPMailer, Context as SealiousContext } from "sealious";
 import type { LoggerLevel } from "sealious/@types/src/app/logger.js";
 import { collections } from "./collections/collections.js";
 import {
@@ -17,7 +17,7 @@ const locreq = _locreq(module_dirname(import.meta.url));
 
 declare module "koa" {
 	interface BaseContext {
-		$context: Sealious.Context;
+		$context: SealiousContext;
 		$app: TheApp;
 	}
 }

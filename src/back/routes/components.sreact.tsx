@@ -1,12 +1,6 @@
-import {
-	ComponentArgument,
-	List,
-	render,
-	simpleJDDContext,
-	Structured,
-} from "@sealcode/jdd";
+import { render } from "@sealcode/jdd";
 import { StateAndMetadata, StatefulPage, to_base64 } from "@sealcode/sealgen";
-import { hasFieldOfType, hasShape, is, predicates } from "@sealcode/ts-predicates";
+import { hasFieldOfType, hasShape, predicates } from "@sealcode/ts-predicates";
 import { BaseContext } from "koa";
 import { Templatable, TempstreamJSX } from "tempstream";
 import html from "../html.js";
@@ -16,149 +10,6 @@ import { ComponentPreviewActions } from "./component-preview/component-preview-a
 import { jdd_context } from "./jdd-context.js";
 
 export const actionName = "Components";
-
-function id<X>(_: unknown, __: unknown, x: X): X {
-	return x;
-}
-
-function isSealiousFile(x: unknown): x is { data: { path: string } } {
-	return hasShape(
-		{
-			getDataPath: predicates.any,
-			data: predicates.shape({ path: predicates.string }),
-		},
-		x
-	);
-}
-
-async function encodeSealiousFile(maybe_file: Record<string, unknown>) {
-	if (isSealiousFile(maybe_file)) {
-		return simpleJDDContext.encode_file(
-			{
-				type: "path",
-				// asserting that this is an instance of sealious' FileFromPath
-				path: maybe_file.data.path,
-			},
-			false
-		);
-	}
-}
-
-const componentArgToRequestProcessor: Record<
-	string,
-	(
-		arg: ComponentArgument<unknown>,
-		arg_name: string,
-		value: unknown
-	) => Promise<unknown>
-> = {
-	list: async function (
-		arg: List<ComponentArgument<unknown>>,
-		arg_name,
-		value: unknown
-	) {
-		if (
-			!is(value, predicates.array(predicates.object)) &&
-			!is(value, predicates.object)
-		) {
-			throw new Error(`$.${arg_name} is not a list or object`);
-		}
-		const values = Array.isArray(value) ? value : Object.values(value);
-		const nested_arg_type = arg.item_type;
-		let array_result: Array<unknown> = await Promise.all(
-			values.map(async (value, index) => {
-				const result = await (
-					componentArgToRequestProcessor[nested_arg_type.getTypeName()] || id
-				)(nested_arg_type, `${arg_name}[${index}]`, value);
-				return result;
-			})
-		);
-		if (nested_arg_type.getTypeName() != "list") {
-			array_result = array_result.flat();
-		}
-		return array_result;
-	},
-	structured: async function (
-		arg: Structured<Record<string, ComponentArgument<unknown>>>,
-		arg_name,
-		value
-	) {
-		if (!is(value, predicates.object)) {
-			throw new Error(`${arg_name} is not an object`);
-		}
-		const result: Record<string, unknown> = {};
-		await Promise.all(
-			Object.entries(value).map(async ([obj_key, obj_value]) => {
-				const nested_arg_type: ComponentArgument<unknown> =
-					arg.structure[obj_key];
-				if (!nested_arg_type) {
-					return [obj_key, null];
-				}
-				const new_value = await (
-					componentArgToRequestProcessor[nested_arg_type.getTypeName()] || id
-				)(arg, `${arg_name}[${obj_key}]`, obj_value);
-				result[obj_key] = new_value;
-			})
-		);
-
-		// if we're in a list and any of the values return an array, we will multiply the object
-		if (arg.hasParent("list")) {
-			const keys_with_unexpected_arrays = Object.entries(result)
-				.filter(([key, value]) => {
-					const nested_arg_type: ComponentArgument<unknown> =
-						arg.structure[key];
-					return (
-						nested_arg_type.getTypeName() !== "list" && Array.isArray(value)
-					);
-				})
-				.map(([key]) => key);
-
-			if (keys_with_unexpected_arrays.length > 1) {
-				throw new Error(
-					"Multiplying on multiple fields at the same time is not implemented yet"
-				);
-			}
-			if (keys_with_unexpected_arrays.length == 1) {
-				const key = keys_with_unexpected_arrays[0];
-				const old_result = result;
-				const array = old_result[key];
-				if (!Array.isArray(array)) {
-					throw new Error("expected an array");
-				}
-
-				return array.map((value: unknown) => ({
-					...old_result,
-					[key]: value,
-				}));
-			} else {
-				return result;
-			}
-		} else {
-			return result;
-		}
-	},
-	image: async function (arg, _, value: unknown) {
-		if (
-			!hasShape(
-				{
-					new: predicates.maybe(predicates.array(predicates.object)),
-					old: predicates.string,
-				},
-				value
-			)
-		) {
-			return null;
-		}
-		const files = (value.new || []).filter((e) => e);
-		if (files.length == 0) {
-			return value.old;
-		} else if (files.length == 1) {
-			return encodeSealiousFile(files[0]);
-		} else if (arg.hasParent("list")) {
-			return Promise.all(files.map(encodeSealiousFile));
-		}
-	},
-};
 
 export type ComponentPreviewState = {
 	component: string;
@@ -203,21 +54,11 @@ export default new (class ComponentsPage extends StatefulPage<
 		);
 	}
 
-	async preprocessRequestBody<
-		T extends StateAndMetadata<ComponentPreviewState, typeof ComponentPreviewActions>
-	>(values: Record<string, unknown>): Promise<T> {
-		const old_component = hasFieldOfType(values, "component", predicates.string)
-			? values.component
-			: null;
-
-		const new_component = hasShape(
-			{ $: predicates.shape({ component: predicates.string }) },
-			values
-		)
-			? values.$.component
-			: null;
-
-		const component_name = new_component || old_component;
+	async preprocessOverrides(
+		state: ComponentPreviewState,
+		overrides: Record<string, unknown>
+	) {
+		const component_name = state.component;
 		if (!component_name) {
 			throw new Error("Unspecified component name");
 		}
@@ -225,30 +66,25 @@ export default new (class ComponentsPage extends StatefulPage<
 		if (!component) {
 			throw new Error(`Unknown component: ${component_name}`);
 		}
-		if (
-			!hasShape(
-				{ $: predicates.shape({ component_args: predicates.object }) },
-				values
-			)
-		) {
-			// no component args to overwrite
-			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-			return values as T;
+		if (!hasShape({ component_args: predicates.object }, overrides)) {
+			return overrides;
 		}
 		const promises = Object.entries(component.getArguments()).map(
 			async ([arg_name, arg]) => {
-				const value = values.$.component_args[arg_name];
+				const value = overrides.component_args[arg_name];
 				if (value) {
-					const new_value = await (
-						componentArgToRequestProcessor[arg.getTypeName()] || id
-					)(arg, arg_name, value);
-					values.$.component_args[arg_name] = new_value;
+					const new_value = await arg.parseFormInput(
+						jdd_context,
+						value,
+						arg_name
+					);
+					overrides.component_args[arg_name] = new_value;
 				}
 			}
 		);
 		await Promise.all(promises);
 		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-		return values as T;
+		return overrides;
 	}
 
 	render(_ctx: BaseContext, state: ComponentPreviewState) {
@@ -256,7 +92,11 @@ export default new (class ComponentsPage extends StatefulPage<
 		const component =
 			registry.get(state.component) || Object.values(all_components)[0];
 		return (
-			<div class="two-column" id="component-debugger">
+			<div
+				class="two-column"
+				id="component-debugger"
+				style="--resizable-column-width: 50vw"
+			>
 				<div class="resizable">
 					{/*The below button has to be here in order for it to be the default behavior */}
 					<input type="submit" value="Preview" />
@@ -309,10 +149,12 @@ export default new (class ComponentsPage extends StatefulPage<
 									origin_width + (e.clientX - origin_x),
 									1
 								);
-								document.documentElement.style.setProperty(
-									"--resizable-column-width",
-									new_width + "px"
-								);
+								document
+									.getElementById("component-debugger")
+									.style.setProperty(
+										"--resizable-column-width",
+										new_width + "px"
+									);
 							};
 							gutter.addEventListener("mousedown", (e) => {
 								is_resizing = true;

@@ -3,6 +3,7 @@
 @import "../node_modules/@sealcode/sealgen/src/forms/forms.css";
 @import "back/jdd-components/image-demo/image-demo.css";
 @import "back/jdd-components/map-with-pins/map-with-pins.css";
+@import "back/jdd-components/table/table.css";
 @import "back/routes/common/ui/input.css";
 @import "back/routes/components.css";
 @import "colors.css";

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
+<svg
+   width="533.33331"
+   height="533.33331"
+   viewBox="0 0 15.999999 15.999999"
+   fill="none"
+   version="1.1"
+   id="svg2"
+   sodipodi:docname="table-add-row-header-below.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="namedview2"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.86875"
+     inkscape:cx="265.89928"
+     inkscape:cy="266.47482"
+     inkscape:window-width="1536"
+     inkscape:window-height="928"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="M 0,0 H 16 V 16 H 0 Z M 1.5,1.5 V 4 h 3 V 1.5 Z M 6,1.5 V 4 H 9.9999 L 10,1.5 Z m 5.5,0 -10e-5,2.5 H 14.5 V 1.5 Z m 3,4 h -13 v 9 h 13 z"
+     fill="#1f2328"
+     id="path1" />
+  <path
+     fill-rule="evenodd"
+     clip-rule="evenodd"
+     d="M 4.4849442,9.891467 V 7.692536 H 5.8043028 V 9.891467 H 8.003322 v 1.319359 H 5.8043028 v 2.198931 H 4.4849442 V 11.210826 H 2.286013 V 9.891467 Z"
+     fill="#1F2328"
+     id="path2"
+     style="fill:#009e00;fill-opacity:1;stroke-width:0.879573" />
+  <g
+     id="g1"
+     transform="translate(-3.2633543,-4)">
+    <path
+       fill-rule="evenodd"
+       clip-rule="evenodd"
+       d="m 12.442783,13.891467 v -2.198931 h 1.319359 v 2.198931 h 2.199019 v 1.319359 h -2.199019 v 2.198931 h -1.319359 v -2.198931 z"
+       fill="#1F2328"
+       id="path2-6"
+       style="fill:#009e00;fill-opacity:1;stroke-width:0.879573"
+       sodipodi:nodetypes="ccccccccccc" />
+    <path
+       fill-rule="evenodd"
+       clip-rule="evenodd"
+       d="M 16.758927,13.898931 V 11.7 h -1.319359 v 2.198931 h -2.199019 v 1.319359 h 2.199019 v 2.198931 h 1.319359 V 15.21829 Z"
+       fill="#1F2328"
+       id="path2-6-7"
+       style="fill:#009e00;fill-opacity:1;stroke-width:0.879573"
+       sodipodi:nodetypes="ccccccccccc" />
+  </g>
+</svg>

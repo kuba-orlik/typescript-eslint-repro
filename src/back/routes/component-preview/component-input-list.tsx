@@ -15,7 +15,7 @@ export async function ComponentInputList<State extends ComponentPreviewState, T>
 }: {
 	state: State;
 	arg_path: string[];
-	arg: List<ComponentArgument<T>>;
+	arg: List<T>;
 	value: T[];
 	page: StatefulPage<ComponentPreviewState, typeof ComponentPreviewActions>;
 }) {
