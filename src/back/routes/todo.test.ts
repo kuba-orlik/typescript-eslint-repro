@@ -15,7 +15,12 @@ describe("Todo webhint", () => {
 					async () => {
 						await rest_api.get(TodoURL);
 					},
-					{ name: "Error" }
+					{
+						response: {
+							data: "no access",
+							status: 403,
+						},
+					}
 				);
 			});
 		},

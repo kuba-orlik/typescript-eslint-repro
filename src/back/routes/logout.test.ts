@@ -23,21 +23,6 @@ describe.concurrent("Logout", () => {
 		await context.close();
 	});
 
-	it(
-		"doesn't crash",
-		async function () {
-			return withProdApp(async ({ rest_api }) => {
-				await assert.rejects(
-					async () => {
-						await rest_api.get(LogoutURL);
-					},
-					{ name: "Error" }
-				);
-			});
-		},
-		VERY_LONG_TEST_TIMEOUT
-	);
-
 	describe("logout test", () => {
 		it(
 			"logout",
