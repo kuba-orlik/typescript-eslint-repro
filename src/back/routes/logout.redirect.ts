@@ -12,7 +12,6 @@ export default new (class LogoutRedirect extends Mountable {
 
 	mount(router: Router, path: string) {
 		router.get(path, async (ctx) => {
-			console.log("logout.redirect.ts:15");
 			try {
 				const session_id = ctx.cookies.get("sealious-session");
 				if (session_id) {
