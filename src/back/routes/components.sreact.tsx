@@ -136,45 +136,11 @@ export default new (class ComponentsPage extends StatefulPage<
 					<code>{JSON.stringify(state)}</code>
 				</div>
 				<div class="resize-gutter"></div>
-				{
-					/* HTML */ `<script>
-						(function () {
-							let is_resizing = false;
-							let origin_x;
-							let origin_width;
-							const gutter = document.querySelector(".resize-gutter");
-							const resizable = document.querySelector(".resizable");
-							const move_listener = (e) => {
-								const new_width = Math.max(
-									origin_width + (e.clientX - origin_x),
-									1
-								);
-								document
-									.getElementById("component-debugger")
-									.style.setProperty(
-										"--resizable-column-width",
-										new_width + "px"
-									);
-							};
-							gutter.addEventListener("mousedown", (e) => {
-								is_resizing = true;
-								origin_x = e.clientX;
-								origin_width = resizable.getBoundingClientRect().width;
-								document.addEventListener("mousemove", move_listener);
-								document.addEventListener("mouseup", () => {
-									document.removeEventListener(
-										"mousemove",
-										move_listener
-									);
-								});
-								e.preventDefault();
-							});
-						})();
-					</script>`
-				}
 				<div class="component-preview">
 					<fieldset>
-						<legend>Preview</legend>
+						<legend>
+							Preview <span id="component_width_span"></span>
+						</legend>
 						{render(
 							registry,
 							[
@@ -186,6 +152,60 @@ export default new (class ComponentsPage extends StatefulPage<
 							jdd_context
 						)}
 					</fieldset>
+					{
+						/* HTML */ `<script>
+							(function () {
+								function update_width_display() {
+									const component_width =
+										document.getElementsByClassName(
+											"component-preview"
+										)[0].offsetWidth;
+									document.getElementById(
+										"component_width_span"
+									).innerHTML = \`(width: \${component_width}px)\`;
+								}
+								window.addEventListener("load", (event) => {
+									update_width_display();
+								});
+								document.addEventListener(
+									"turbo:render",
+									update_width_display
+								);
+								let is_resizing = false;
+								let origin_x;
+								let origin_width;
+								const gutter = document.querySelector(".resize-gutter");
+								const resizable = document.querySelector(".resizable");
+								const move_listener = (e) => {
+									const new_width = Math.max(
+										origin_width + (e.clientX - origin_x),
+										1
+									);
+									document
+										.getElementById("component-debugger")
+										.style.setProperty(
+											"--resizable-column-width",
+											new_width + "px"
+										);
+									update_width_display();
+								};
+								gutter.addEventListener("mousedown", (e) => {
+									is_resizing = true;
+									origin_x = e.clientX;
+									origin_width =
+										resizable.getBoundingClientRect().width;
+									document.addEventListener("mousemove", move_listener);
+									document.addEventListener("mouseup", () => {
+										document.removeEventListener(
+											"mousemove",
+											move_listener
+										);
+									});
+									e.preventDefault();
+								});
+							})();
+						</script>`
+					}
 				</div>
 				{
 					/* HTML */ `<script>
