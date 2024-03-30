@@ -3,7 +3,7 @@ import { Controller } from "stimulus";
 export default class ComponentDebugger extends Controller {
 	id: string;
 	main_form: HTMLFormElement;
-	is_resizing: boolean = false;
+	is_resizing = false;
 	origin_x: number;
 	origin_width: number;
 
@@ -25,13 +25,15 @@ export default class ComponentDebugger extends Controller {
 		});
 		document.addEventListener("turbo:render", () => this.update_width_display());
 
+		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 		const gutter = this.targets.find("gutter") as HTMLDivElement;
 		gutter.addEventListener("mousedown", (e) => {
 			this.is_resizing = true;
 			this.origin_x = e.clientX;
+			// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 			const resizable = this.targets.find("preview") as HTMLSpanElement;
 			this.origin_width = resizable.getBoundingClientRect().width;
-			const handler = this.resizeHandler.bind(this);
+			const handler = (e: MouseEvent) => this.resizeHandler(e);
 			document.addEventListener("mousemove", handler);
 			document.addEventListener("mouseup", () => {
 				document.removeEventListener("mousemove", handler);
@@ -41,11 +43,15 @@ export default class ComponentDebugger extends Controller {
 	}
 
 	update_width_display() {
-		const component_width = (this.targets.find("preview") as HTMLSpanElement)
-			.offsetWidth;
-		(
-			this.targets.find("component-width") as HTMLSpanElement
-		).innerHTML = `(width: ${component_width}px)`;
+		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+		const preview = this.targets.find("preview") as HTMLSpanElement;
+		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+		const component_width_element = this.targets.find(
+			"component-width"
+		) as HTMLSpanElement;
+		const component_width = preview.offsetWidth;
+		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+		component_width_element.innerHTML = `(width: ${component_width}px)`;
 	}
 
 	resizeHandler(e: MouseEvent) {
@@ -54,7 +60,7 @@ export default class ComponentDebugger extends Controller {
 		const new_width = Math.max(this.origin_width + width_offset, 1);
 		document
 			.getElementById("component-debugger")
-			.style.setProperty("--resizable-column-width", new_width + "px");
+			.style.setProperty("--resizable-column-width", new_width.toString() + "px");
 		this.update_width_display();
 	}
 }

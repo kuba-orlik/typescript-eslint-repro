@@ -1,7 +1,7 @@
 module.exports = {
 	env: { node: true },
 	parser: "@typescript-eslint/parser",
-	plugins: ["@typescript-eslint", "prettier", "with-tsc-error"],
+	plugins: ["@typescript-eslint", "prettier"],
 	extends: [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
@@ -13,20 +13,17 @@ module.exports = {
 		ecmaFeatures: {
 			modules: true,
 		},
-		project: [
-			"./src/back/tsconfig.json",
-			"./src/front/tsconfig.json",
-		],
+		project: ["./tsconfig.json", "./tsconfig-back.json"],
 	},
 	rules: {
-		"@typescript-eslint/no-unused-vars": [2, { "varsIgnorePattern": "TempstreamJSX" }],
+		"@typescript-eslint/no-unused-vars": [2, { varsIgnorePattern: "TempstreamJSX" }],
 		"@typescript-eslint/require-await": 0,
 		/* "jsdoc/require-description": 2, */
 		"no-await-in-loop": 2,
 		"@typescript-eslint/consistent-type-assertions": [1, { assertionStyle: "never" }],
-		"no-console": [1, { "allow": ["error"] }]
+		"no-console": [1, { allow: ["error"] }],
 	},
-	"ignorePatterns": ["dist/*", "public/dist/*", "coverage/*", "webhint/*"],
+	ignorePatterns: ["dist/*", "public/dist/*", "coverage/*", "webhint/*"],
 	settings: { jsdoc: { mode: "typescript" } },
 	overrides: [
 		{

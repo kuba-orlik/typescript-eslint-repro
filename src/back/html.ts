@@ -1,9 +1,9 @@
 import { FlatTemplatable, Templatable, tempstream } from "tempstream";
 import { Readable } from "stream";
 import { BaseContext } from "koa";
-import { default as default_navbar } from "./routes/common/navbar.js";
 import { toKebabCase } from "js-convert-case";
 import { DEFAULT_HTML_LANG } from "./config.js";
+import { default_navbar } from "./routes/common/navbar.js";
 
 export const defaultHead = (
 	ctx: BaseContext,
@@ -60,7 +60,7 @@ export default function html(
 				${makeHead(ctx, title, htmlOptions)}
 			</head>
 			<body data-controller="${controllers.join(" ")}">
-				${(htmlOptions.navbar || default_navbar)(ctx)} ${body}
+				${(htmlOptions?.navbar || default_navbar)(ctx)} ${body}
 				${htmlOptions.disableCopyEvent
 					? /* HTML */ "<script>document.addEventListener('copy', (e) => e.preventDefault());</script>"
 					: ""}

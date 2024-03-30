@@ -1,7 +1,8 @@
 import { BaseContext } from "koa";
+import { FlatTemplatable } from "tempstream";
 import { SignUpURL, SignInURL, TodoURL, LogoutURL } from "../urls.js";
 
-export default async function navbar(ctx: BaseContext) {
+export async function default_navbar(ctx: BaseContext): Promise<FlatTemplatable> {
 	const isLoggedIn = !!ctx.$context.session_id;
 
 	const linkData = isLoggedIn

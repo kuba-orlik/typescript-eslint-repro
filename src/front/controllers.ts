@@ -4,10 +4,10 @@ import * as Turbo from "@hotwired/turbo";
 import { Application } from "stimulus";
 const application = Application.start();
 
-import { default as RefreshOnTsChanges } from "./../back/html/refresh-on-ts-changes.stimulus.js";
+import { default as RefreshOnTsChanges } from "./../back/html-controllers/refresh-on-ts-changes.stimulus.js";
 application.register("refresh-on-ts-changes", RefreshOnTsChanges);
 
-import { default as RefreshStyles } from "./../back/html/refresh-styles.stimulus.js";
+import { default as RefreshStyles } from "./../back/html-controllers/refresh-styles.stimulus.js";
 application.register("refresh-styles", RefreshStyles);
 
 import { default as MapWithPins } from "./../back/jdd-components/map-with-pins/map-with-pins.stimulus.js";

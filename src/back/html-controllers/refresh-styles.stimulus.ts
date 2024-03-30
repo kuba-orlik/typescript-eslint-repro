@@ -15,7 +15,6 @@ function getStyles() {
 }
 
 function cleanup_css() {
-	console.log("clearing styles");
 	getStyles()
 		.slice(0, -1)
 		.forEach((style) => {
@@ -27,8 +26,10 @@ export default class RefreshStyles extends Controller {
 	socket: WebSocket;
 
 	async connect() {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const { port } = await fetch("/dist/notifier.json").then((r) => r.json());
-		this.socket = new WebSocket(`ws://localhost:${port}`);
+		// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+		this.socket = new WebSocket(`ws://localhost:${port as number}`);
 		this.socket.onmessage = async (message) => {
 			if (message.data === "css") {
 				const new_link = make_new_link();

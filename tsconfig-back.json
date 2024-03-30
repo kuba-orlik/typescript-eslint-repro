@@ -19,7 +19,7 @@
 		"skipLibCheck": true,
 		"types": ["vitest/globals"]
 	},
-	"include": ["./src/back/*", "./src/back/**/*"],
+	"include": ["./src/back/*", "./src/back/**/*", "./src/back/routes/common/navbar.ts"],
 	"exclude": ["./src/front", "./src/**/*.stimulus.ts"],
 	"ts-node": { "experimentalResolver": true, "esm": true }
 }
