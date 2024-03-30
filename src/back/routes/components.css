@@ -5,7 +5,7 @@
 
 	.two-column {
 		display: grid;
-		grid-template-columns: min-content 15px 1fr;
+		grid-template-columns: 1fr 15px min-content;
 	}
 
 	.resize-gutter {
@@ -15,7 +15,6 @@
 	}
 
 	.resizable {
-		width: var(--resizable-column-width);
 		overflow-x: auto;
 	}
 
@@ -23,6 +22,20 @@
 	&.restarting {
 		transform: scale(0.99);
 		opacity: 0.6;
+	}
+
+	.component-preview {
+		width: var(--resizable-column-width);
+
+		& > fieldset {
+			min-width: 0; /* default is min-content and that causes overflow*/
+			max-height: calc(100vh - 75px);
+			overflow-x: auto;
+		}
+	}
+	.component-arguments {
+		max-height: calc(100vh - 80px);
+		overflow-y: auto;
 	}
 }
 

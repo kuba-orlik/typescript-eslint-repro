@@ -5,5 +5,5 @@
 		"lib": ["dom"],
 		"skipLibCheck": true
 	},
-	"include": ["./**/*", "./index.ts"]
+	"include": ["./src/front", "./src/**/*.stimulus.ts"]
 }

@@ -1,7 +1,6 @@
 .map-with-pins {
-	#map {
-		height: 534px;
-	}
+	height: 534px;
+
 	.popup {
 		.leaflet-popup-content-wrapper,
 		.leaflet-popup-tip {
@@ -32,6 +31,7 @@
 		font-size: 12px;
 		line-height: 21px;
 	}
+
 	.button {
 		display: inline-block;
 		margin: 0 auto;

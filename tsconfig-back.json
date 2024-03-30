@@ -8,7 +8,7 @@
 		"target": "ES2019",
 		"esModuleInterop": true,
 		"lib": ["es2021"],
-		"outDir": "../../dist/back",
+		"outDir": "./dist/back",
 		"keyofStringsOnly": true,
 		"jsx": "react",
 		"reactNamespace": "TempstreamJSX",
@@ -19,6 +19,7 @@
 		"skipLibCheck": true,
 		"types": ["vitest/globals"]
 	},
-	"include": ["./**/*", "./*"],
+	"include": ["./src/back/*", "./src/back/**/*"],
+	"exclude": ["./src/front", "./src/**/*.stimulus.ts"],
 	"ts-node": { "experimentalResolver": true, "esm": true }
 }

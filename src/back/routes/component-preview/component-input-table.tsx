@@ -40,11 +40,7 @@ export async function ComponentInputTable<
 	return (
 		<fieldset>
 			<legend>{arg_path.at(-1)}</legend>
-			<div
-				style={`max-width: calc(var(--resizable-column-width) - ${
-					arg_path.length + 3
-				} * 14px); overflow-x: auto; max-height: 500px; overflow-y: auto;`}
-			>
+			<div>
 				<table style="position: relative; /* necessary for sticky th*/">
 					<tbody>
 						<tr>

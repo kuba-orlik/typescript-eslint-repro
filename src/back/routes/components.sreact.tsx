@@ -1,9 +1,9 @@
-import { render } from "@sealcode/jdd";
-import { StateAndMetadata, StatefulPage, to_base64 } from "@sealcode/sealgen";
-import { hasFieldOfType, hasShape, predicates } from "@sealcode/ts-predicates";
+import { render, renderEarlyAssets } from "@sealcode/jdd";
+import { StatefulPage, to_base64 } from "@sealcode/sealgen";
+import { hasShape, predicates } from "@sealcode/ts-predicates";
 import { BaseContext } from "koa";
-import { Templatable, TempstreamJSX } from "tempstream";
-import html from "../html.js";
+import { Templatable, tempstream, TempstreamJSX } from "tempstream";
+import html, { defaultHead } from "../html.js";
 import { registry } from "../jdd-components/components.js";
 import { ComponentInput } from "./component-preview/component-input.js";
 import { ComponentPreviewActions } from "./component-preview/component-preview-actions.js";
@@ -31,13 +31,33 @@ export default new (class ComponentsPage extends StatefulPage<
 		return initial_state;
 	}
 
-	wrapInLayout(ctx: BaseContext, content: Templatable): Templatable {
-		return html(ctx, "Components", content, {
-			morphing: false,
-			preserveScroll: true,
-			autoRefreshCSS: true,
-			navbar: () => ``,
-		});
+	wrapInLayout(
+		ctx: BaseContext,
+		content: Templatable,
+		state: ComponentPreviewState
+	): Templatable {
+		return html(
+			ctx,
+			"Components",
+			content,
+			{
+				morphing: true,
+				preserveScroll: true,
+				autoRefreshCSS: true,
+				navbar: () => ``,
+			},
+			(...args) =>
+				tempstream`${defaultHead(...args)}${renderEarlyAssets(
+					registry,
+					[
+						{
+							component_name: state.component,
+							args: state.component_args,
+						},
+					],
+					jdd_context
+				)}`
+		);
 	}
 
 	wrapInForm(state: ComponentPreviewState, content: Templatable): Templatable {
@@ -96,8 +116,9 @@ export default new (class ComponentsPage extends StatefulPage<
 				class="two-column"
 				id="component-debugger"
 				style="--resizable-column-width: 50vw"
+				data-controller="component-debugger"
 			>
-				<div class="resizable">
+				<div class="component-arguments">
 					{/*The below button has to be here in order for it to be the default behavior */}
 					<input type="submit" value="Preview" />
 					<select
@@ -135,11 +156,12 @@ export default new (class ComponentsPage extends StatefulPage<
 					</fieldset>
 					<code>{JSON.stringify(state)}</code>
 				</div>
-				<div class="resize-gutter"></div>
-				<div class="component-preview">
+				<div class="resize-gutter" data-component-debugger-target="gutter"></div>
+				<div class="component-preview" data-component-debugger-target="preview">
 					<fieldset>
 						<legend>
-							Preview <span id="component_width_span"></span>
+							Preview{" "}
+							<span data-component-debugger-target="component-width"></span>
 						</legend>
 						{render(
 							registry,
@@ -155,75 +177,11 @@ export default new (class ComponentsPage extends StatefulPage<
 					{
 						/* HTML */ `<script>
 							(function () {
-								function update_width_display() {
-									const component_width =
-										document.getElementsByClassName(
-											"component-preview"
-										)[0].offsetWidth;
-									document.getElementById(
-										"component_width_span"
-									).innerHTML = \`(width: \${component_width}px)\`;
-								}
-								window.addEventListener("load", (event) => {
-									update_width_display();
-								});
-								document.addEventListener(
-									"turbo:render",
-									update_width_display
-								);
-								let is_resizing = false;
-								let origin_x;
-								let origin_width;
 								const gutter = document.querySelector(".resize-gutter");
-								const resizable = document.querySelector(".resizable");
-								const move_listener = (e) => {
-									const new_width = Math.max(
-										origin_width + (e.clientX - origin_x),
-										1
-									);
-									document
-										.getElementById("component-debugger")
-										.style.setProperty(
-											"--resizable-column-width",
-											new_width + "px"
-										);
-									update_width_display();
-								};
-								gutter.addEventListener("mousedown", (e) => {
-									is_resizing = true;
-									origin_x = e.clientX;
-									origin_width =
-										resizable.getBoundingClientRect().width;
-									document.addEventListener("mousemove", move_listener);
-									document.addEventListener("mouseup", () => {
-										document.removeEventListener(
-											"mousemove",
-											move_listener
-										);
-									});
-									e.preventDefault();
-								});
 							})();
 						</script>`
 					}
 				</div>
-				{
-					/* HTML */ `<script>
-						const main_form = document
-							.querySelector("#component-debugger")
-							.closest("form");
-						document.documentElement.addEventListener("ts-rebuilt", () => {
-							main_form.requestSubmit();
-						});
-						main_form.addEventListener("turbo:submit-end", () => {
-							// this clears the values of file inputs, so they don't get unecessarily
-							// re-uploaded on future submissions - the file is alreade there on the server
-							main_form
-								.querySelectorAll("input[type=file]")
-								.forEach((input) => (input.value = ""));
-						});
-					</script>`
-				}
 			</div>
 		);
 	}
